@@ -1,0 +1,48 @@
+What is Zone-less Angular?
+Zone-less Angular removes reliance on zone.js, the library that traditionally patches async browser APIs to auto-trigger change detection in Angular apps.
+
+Instead, Angular only triggers change detection when explicitly told to, such as:
+
+When a signal value changes
+
+When an event binding occurs ((click), etc.)
+
+When manual APIs like ChangeDetectorRef.markForCheck() or detectChanges() are used
+
+
+How to Enable Zone-less Angular
+Remove the zone.js polyfill
+In angular.json, remove this line from polyfills:
+
+"zone.js"
+Enable experimental zone-less mode
+In main.ts or app.config.ts, add:
+import { provideExperimentalZonelessChangeDetection } from '@angular/core';
+
+bootstrapApplication(AppComponent, {
+  providers: [provideExperimentalZonelessChangeDetection()],
+});
+
+
+Benefits of Going Zone-less
+Performance Boost: Fewer automatic checks = faster UI updates
+
+Reduced Bundle Size: No zone.js = smaller payload
+
+Greater Control: You choose when to run change detection
+
+Cleaner Debugging: Logs become meaningful without redundant re-evaluations
+
+⚠️ Caveats
+Manual responsibility: You must now manually control updates (or use reactive primitives like signals).
+
+Third-party compatibility: Many libraries (e.g., Angular Material, Firebase, RxJS integrations) assume zone.js is present.
+
+Experimental: Still under the provideExperimentalZonelessChangeDetection() flag, so may change in future Angular versions.
+
+💡 Best Practice
+Use zone-less mode when:
+Your app is signal-driven
+You want maximum performance
+You can fully control async behavior
+You're not relying on zone-dependent third-party libraries

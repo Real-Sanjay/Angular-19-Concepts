@@ -1,0 +1,136 @@
+useFactory Provider in Angular
+What is it?
+useFactory lets you provide a value or service by executing a function — this function can contain custom logic, return a service instance, or generate a computed value.
+
+ When to use it?
+To create services with custom logic
+When you need conditional logic
+To inject values that depend on runtime data
+Useful for asynchronous or lazy-loaded configurations
+
+Basic Example
+1.  message.service.ts
+code:
+export class MessageService {
+  getMessage() {
+    return 'Hello from the factory!';
+  }
+}
+2.  Factory Function
+code:
+export function messageFactory() {
+  return new MessageService();
+}
+3.  In app.module.ts or @Component.providers
+code:
+import { MessageService, messageFactory } from './message.service';
+
+@Component({
+  selector: 'app-root',
+  template: `<h1>{{ msg }}</h1>`,
+  providers: [
+    {
+      provide: MessageService,
+      useFactory: messageFactory
+    }
+  ]
+})
+export class AppComponent {
+  msg: string = '';
+  constructor(private messageService: MessageService) {
+    this.msg = this.messageService.getMessage();
+  }
+}
+
+Real Use Case — Config from Runtime
+Imagine loading an API base URL from local storage or environment:
+
+code:
+export function configFactory() {
+  return {
+    apiUrl: localStorage.getItem('apiUrl') || 'https://default-api.com'
+  };
+}
+Then provide:
+
+code:
+providers: [
+  {
+    provide: 'APP_CONFIG',
+    useFactory: configFactory
+  }
+]
+
+Summary Table: useClass vs useValue vs useExisting vs useFactory
+
+Provider Type	What It Provides	            Use When...
+useClass	    A new instance of a class	    You want Angular to instantiate a class automatically
+useValue	    A constant value	            You want to inject config or primitive values
+useExisting	    An alias to an existing token	You want two tokens to point to the same instance
+useFactory	    Result of a factory function	You need custom logic to generate a service/value
+
+Q&A Recap:
+Q1: What is the useFactory property and how to define it?
+A: It’s a provider configuration in Angular used to define a factory function which returns a value or service instance. You define it by writing a function that returns the required object and passing it to useFactory.
+
+Q2: Why does useFactory expect a function?
+A: Because it needs to dynamically create and return the desired object/value at runtime. This enables custom logic, conditional flow, and runtime configuration in a flexible and powerful way.
+
+
+Understanding deps in useFactory Provider
+What is deps?
+The deps (short for dependencies) property is used along with useFactory to tell Angular what dependencies the factory function needs in order to execute and return a value or service.
+
+Without this property, Angular won’t know what to inject into the factory function.
+providers: [
+  {
+    provide: AppUpdateService,
+    useFactory: (configService: AppConfigService) => {
+      return new AppUpdateService(configService.config());
+    },
+    deps: [AppConfigService]
+  }
+]
+
+Key Point:
+If your factory function expects dependencies as parameters, then you must specify those classes/services inside the deps array.
+
+Real-life Analogy
+Imagine you're baking a cake (useFactory) and you need ingredients like flour and eggs (deps). If you don't tell someone what you need, they can't help you bake it. 🧁
+
+Common Q&A
+❓ Q1: What is the purpose of the deps property in a useFactory provider?
+Answer: The deps property is an array that specifies the dependencies required by the factory function. It ensures Angular provides the necessary services/components when executing the factory, enabling proper dependency injection.
+
+❓ Q2: Can the deps property be omitted?
+Answer: Yes ✅. The deps property is optional if the factory function does not require any external dependencies (i.e., parameters). Omitting it in such cases keeps the code simpler and cleaner.
+
+ Mini Exercise Example (for practice)
+Let’s say you have a UserSettingsService:
+code:
+export class UserSettingsService {
+  getSettings() {
+    return { theme: 'dark', fontSize: 16 };
+  }
+}
+Now you want to create a factory that returns a config object using the settings:
+code:
+export function settingsFactory(userSettings: UserSettingsService) {
+  const settings = userSettings.getSettings();
+  return {
+    uiTheme: settings.theme,
+    baseFont: settings.fontSize
+  };
+}
+Provider:
+code:
+{
+  provide: 'UI_CONFIG',
+  useFactory: settingsFactory,
+  deps: [UserSettingsService]
+}
+Injection:
+code:
+constructor(@Inject('UI_CONFIG') private config: any) {
+  console.log(this.config);
+}

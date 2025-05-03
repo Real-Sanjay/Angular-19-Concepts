@@ -1,0 +1,79 @@
+What is useValue in Angular?
+useValue is a type of provider that lets you supply a constant value directly, instead of using a class. This is useful for injecting primitive values, configuration objects, or simple data.
+
+Example: Using useValue
+Let’s say we want to inject a greeting message (a string) into a component.
+
+dependencies/tokens.ts
+code:
+import { InjectionToken } from '@angular/core';
+
+export const STR_MESSAGE = new InjectionToken<string>('greeting');
+app.component.ts
+code:
+import { Component, Inject } from '@angular/core';
+import { STR_MESSAGE } from './dependencies/tokens';
+
+@Component({
+  selector: 'app-root',
+  template: `<h1>{{ message }}</h1>`,
+  providers: [
+    { provide: STR_MESSAGE, useValue: 'Hello Dev! Welcome to Angular DI' }
+  ]
+})
+export class AppComponent {
+  constructor(@Inject(STR_MESSAGE) public message: string) {}
+}
+ Output on screen:
+Hello Dev! Welcome to Angular DI 
+
+useClass vs useValue
+
+Feature     	    useClass	                            useValue
+What it provides	A class instance	                    A constant value (primitive or object)
+Use case	        Services, utilities,                    logic-related features	App configs, base URLs, tokens, environment variables
+Instance creation	New instance each time	                Same value every time
+Injected into	    Constructor expecting a class type	    Constructor expecting the same value type
+Syntax	            useClass: SomeServiceClass	            useValue: 'Some constant value'
+
+
+Real-World Use Case for useValue
+Let’s say you're managing multiple environments (dev, staging, production) and you want to inject a base API URL dynamically.
+
+app-config.ts
+code:
+export interface AppConfig {
+  apiBaseUrl: string;
+}
+app.tokens.ts
+code:
+import { InjectionToken } from '@angular/core';
+import { AppConfig } from './app-config';
+
+export const APP_CONFIG = new InjectionToken<AppConfig>('app.config');
+In app.module.ts
+code:
+import { APP_CONFIG } from './app.tokens';
+
+const config = {
+  apiBaseUrl: 'https://dev-api.yourapp.com'
+};
+
+@NgModule({
+  providers: [
+    { provide: APP_CONFIG, useValue: config }
+  ]
+})
+export class AppModule {}
+In a service
+code:
+constructor(@Inject(APP_CONFIG) private config: AppConfig) {
+  console.log(this.config.apiBaseUrl); // 'https://dev-api.yourapp.com'
+}
+
+Quick Recap: When to use what?
+Scenario	                                            Provider Type
+Injecting a class/service	                            useClass
+Injecting a fixed constant, like app name or URL	    useValue
+Want to generate value dynamically at runtime	        useFactory
+Want to reuse an existing provider under another token	useExisting

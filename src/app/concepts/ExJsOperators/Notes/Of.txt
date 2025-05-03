@@ -1,0 +1,38 @@
+ of() Operator 
+Purpose:
+
+The of() operator is a creation operator in RxJS that allows you to create an observable from a list of values.
+Each value becomes a separate emission in the observable sequence.
+After all values are emitted, the observable completes.
+
+Key Features:
+Emits each argument as a next notification.
+Can emit numbers, strings, arrays, objects, or functions.
+Useful for creating test observables or simple data streams.
+
+Example:
+
+import { of } from 'rxjs';
+
+const obs$ = of(1, 2, 3, 4);
+obs$.subscribe(val => console.log(val));
+Output:
+
+1
+2
+3
+4
+It also works with other types:
+
+const mixed$ = of(
+  { name: 'Sanjay', age: 25 },
+  [1, 2, 3],
+  () => 'Hello from function'
+);
+mixed$.subscribe(val => console.log(val));
+
+
+Question for Interviews:
+What is the purpose of the of() operator in RxJS?
+Answer:
+The of() operator creates an observable that emits a set of values in the given order and then completes. Each argument passed to of() becomes one emission in the stream.

@@ -1,0 +1,134 @@
+ngAfterViewInit Lifecycle Hook
+Definition
+ngAfterViewInit() is called once after Angular has fully initialized the component’s view, including all its child components' views.
+
+ View vs Content
+Term	Description
+View	Component class + its associated HTML (template)
+Content	Elements projected into the component using <ng-content> from parent
+
+✅ Use Cases
+Accessing DOM elements via @ViewChild
+Manipulating or styling elements
+Initializing 3rd-party libraries that depend on DOM
+Performing calculations that require view to be rendered
+
+🔧 Example Walkthrough
+Let’s break the example into structured parts.
+
+1️⃣ Setup
+You're projecting some content from AppComponent into TestComponent, and within TestComponent, you're referring to a DOM element using @ViewChild.
+
+2️⃣ Using the Hook
+Here’s how your TestComponent might look:
+
+ts
+
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  ViewChild
+} from '@angular/core';
+
+@Component({
+  selector: 'app-test',
+  template: `
+    <div #wrapper>
+      <ng-content></ng-content>
+    </div>
+  `
+})
+export class TestComponent implements AfterViewInit {
+  @ViewChild('wrapper') wrapper!: ElementRef;
+
+  ngAfterViewInit(): void {
+    console.log('ngAfterViewInit - Hook triggered');
+
+    const div: HTMLElement = this.wrapper.nativeElement;
+    div.style.color = 'blue';
+    div.style.fontSize = '15px';
+    div.style.fontWeight = '300';
+
+    console.log('Wrapper element:', div);
+  }
+}
+
+✅ Now, once the component's view is initialized, this hook will:
+
+Apply styles to the wrapper div
+Log the element and confirm that the view is ready
+
+❓ Why Not ngOnInit?
+🔄 Difference:
+ngOnInit is called before the view is fully rendered — DOM elements may not be available
+ngAfterViewInit is called after the view (and children) is ready — ideal for DOM manipulation
+
+⚠️ Common Pitfall: “Expression has changed after it was checked” Error
+🔍 Scenario:
+You do something like this in ngAfterViewInit:
+
+ts
+export class AppComponent implements AfterViewInit {
+  value = 'Initial value';
+
+  ngAfterViewInit(): void {
+    this.value = 'Updated value';
+  }
+}
+
+❗ Result:
+The view updates after Angular's change detection has already run once — Angular throws:
+ExpressionChangedAfterItHasBeenCheckedError
+
+🛠️ Fix: Delay the Change
+Use setTimeout() or ChangeDetectorRef to defer the update:
+
+ts
+import { AfterViewInit, Component } from '@angular/core';
+
+@Component({
+  selector: 'app-root',
+  template: `<h3>{{ value }}</h3>`
+})
+export class AppComponent implements AfterViewInit {
+  value = 'Initial value';
+
+  ngAfterViewInit(): void {
+    console.log('Checking phase');
+    setTimeout(() => {
+      this.value = 'Updated value';
+      console.log('View updated');
+    }, 2000);
+  }
+}
+✅ This works because the value is now changed after the first change detection cycle is complete.
+
+⚙️ Alternate Fix: ChangeDetectorRef
+Another clean approach:
+
+ts
+import { AfterViewInit, ChangeDetectorRef, Component } from '@angular/core';
+
+@Component({
+  selector: 'app-root',
+  template: `<h3>{{ value }}</h3>`
+})
+export class AppComponent implements AfterViewInit {
+  value = 'Initial value';
+
+  constructor(private cdRef: ChangeDetectorRef) {}
+
+  ngAfterViewInit(): void {
+    this.value = 'Updated value';
+    this.cdRef.detectChanges();  // Triggers another change detection
+  }
+}
+🟡 Use this method with care — avoid doing this repeatedly or inside loops.
+
+🧠 Interview-Style Q&A
+Question	Answer
+Q1: What does ngAfterViewInit do?	It's called once after Angular initializes the component's view and its child views.
+Q2: Why not use ngOnInit instead?	Because DOM elements or view children might not be available in ngOnInit.
+Q3: How do you avoid "ExpressionChangedAfterItHasBeenCheckedError"?	Use setTimeout() or ChangeDetectorRef.detectChanges() to delay updates.
+Q4: When would you most likely use ngAfterViewInit?	DOM manipulation, initializing chart libraries, or accessing view child elements.

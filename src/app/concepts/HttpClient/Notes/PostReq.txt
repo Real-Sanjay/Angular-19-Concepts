@@ -1,0 +1,67 @@
+POST Request Using Angular HTTP Client
+What is a POST Request?
+POST is used to send data to the server.
+Commonly used to create or update resources.
+Takes a payload (body) along with the request.
+Returns a response, often with status or newly created object.
+
+Full Angular POST Implementation
+Component Code
+
+import { Component } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+
+@Component({
+  selector: 'app-post-user',
+  standalone: true,
+  templateUrl: './post-user.component.html'
+})
+export class PostUserComponent {
+  constructor(private http: HttpClient) {}
+
+  postData() {
+    const user = {
+      id: 101,
+      name: 'Jane Doe',
+      email: 'jane@example.com'
+    };
+
+    this.http.post('http://localhost:3000/users', user).subscribe(response => {
+      console.log('User posted successfully:', response);
+    });
+  }
+}
+
+2️⃣ Template Code
+<button (click)="postData()">Send POST Request</button>
+🔧 Setting Up JSON Server (Mock Backend)
+Step 1: Install JSON Server globally
+
+npm install -g json-server
+Step 2: Create a users.json file
+
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "John Doe",
+      "email": "john@example.com"
+    }
+  ]
+}
+Step 3: Start the JSON Server
+
+json-server --watch path/to/users.json
+Server runs at: http://localhost:3000/users
+
+Verifying POST Request
+After clicking the button, you should see:
+A success message in the console
+A new user object added in the JSON data on the browser: http://localhost:3000/users
+
+Common Points to Remember
+Feature	Detail
+http.post()	Sends data to the server with two arguments: endpoint & payload
+Mocking backend	Use json-server for local testing of CRUD operations
+subscribe()	Required to trigger the HTTP request and handle the async response
+Live server data update	JSON server will persist changes directly in the file

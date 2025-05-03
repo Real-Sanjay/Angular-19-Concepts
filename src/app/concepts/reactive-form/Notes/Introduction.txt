@@ -1,0 +1,25 @@
+Difference Between Reactive Forms and Template-Driven Forms in Angular
+
+
+
+Feature                         	Reactive Forms (ReactiveFormsModule)	                                    Template-Driven Forms (FormsModule)
+Approach	                        Programmatic, model-driven	                                                Declarative, template-driven
+Module Required	                    ReactiveFormsModule	                                                        FormsModule
+Form Creation	                    Forms are defined in the component class using FormControl, FormGroup..	    Forms are defined directly in the HTML template using directives like ngModel
+Data Binding	                    One-way binding: from model to view	                                        Two-way binding using [(ngModel)]
+Validation Handling	                Defined programmatically using functions like Validators.required	        Defined in the template using directives like required, minlength, etc.
+Scalability	                        Highly scalable and suitable for complex/dynamic forms	                    Best for simple, static forms
+Form Control Tracking	            Full control over form state and validation through the component	        Angular tracks control state internally
+Testing	                            Easier to write unit tests for reactive forms	                            More difficult to test due to logic being spread in the template
+Flexibility	                        Can dynamically add/remove controls at runtime	                            Limited flexibility
+Example Use Cases	                Complex registration forms, multi-step wizards, dynamic field generation	Simple contact forms, login pages
+
+
+When to Use What?
+Situation	                                                  Recommended Form Type
+Simple form with a few fields	                              Template-driven (FormsModule)
+Dynamic or conditionally-rendered fields	                  Reactive (ReactiveFormsModule)
+Need detailed control over validation or form state	          Reactive Forms
+Project involves many small forms with simple validations	  Template-driven Forms
+
+

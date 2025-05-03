@@ -1,0 +1,49 @@
+RxJS switchMap Operator
+What is it?
+switchMap is a higher-order mapping operator.
+It maps each value from a source observable to a new inner observable.
+Switches to the new observable and cancels the previous one if it hasn’t completed.
+Only the latest inner observable’s emissions are considered.
+
+Use Case Scenario
+Imagine a user typing into a search bar:
+Each keystroke fires an HTTP request.
+You only care about the latest request (i.e., the most recent typed word).
+switchMap cancels all previous HTTP requests and only processes the latest one.
+
+Code Example
+import { of, interval } from 'rxjs';
+import { switchMap, take } from 'rxjs/operators';
+
+const source$ = of(1, 2, 3);
+
+source$
+  .pipe(
+    switchMap(val => {
+      console.log(`Source emitted: ${val}`);
+      console.log('Starting new inner observable...');
+      return interval(1000).pipe(take(3));
+    })
+  )
+  .subscribe(data => console.log(`Inner emitted: ${data}`));
+Output Behavior:
+On first source emission (1), interval(1000) starts.
+Before interval emits all 3 values, the next source value (2) arrives.
+The current inner observable is canceled, and a new one starts.
+This happens for each source emission — only the final inner observable completes.
+
+Difference: switchMap vs concatMap
+
+Feature	                 switchMap	                                concatMap
+Inner Observable	     Canceled on new source emission	        Waits to complete before moving to the next
+Order Maintained?	     ❌ No	                                  ✅ Yes
+Concurrency	             Only 1 active inner observable at a time	Sequential, one after another
+Use Case	             Live search, typeahead, autocomplete	    Sequential requests, task queues
+Memory Manageme   Efficient (no accumulation of inner observables)	Risk of piling up if many emissions
+
+Q&A
+Q: What does switchMap do in RxJS?
+A: switchMap maps each source emission to an inner observable but cancels any previously active inner observable. It's useful when you only care about the latest result — like in autocomplete or real-time user input scenarios.
+
+Q: How is switchMap different from concatMap?
+A: concatMap queues inner observables and waits for each to finish before starting the next, preserving order. In contrast, switchMap cancels the previous observable whenever a new value is emitted, processing only the most recent one.

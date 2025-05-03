@@ -1,0 +1,9 @@
+<div class="container">
+    <label for="age">Enter your age: </label>
+    <input type="text" id="age" (input)="checkEligibility()" [(ngModel)]="age" />
+    <div class="message" [ngSwitch]="isEligible">
+      <p *ngSwitchCase="true" class="eligible">You are eligible to vote</p>
+      <p *ngSwitchDefault class="not-eligible">You are not eligible to vote!</p>
+    </div>
+  </div>
+  

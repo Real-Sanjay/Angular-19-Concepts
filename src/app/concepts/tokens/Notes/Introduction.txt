@@ -1,0 +1,83 @@
+What Are Injection Tokens in Angular?
+In Angular, an Injection Token acts like a unique key used by Angular’s Dependency Injection (DI) system to identify and retrieve a dependency.
+
+Why Do We Need Injection Tokens?
+In many real-world apps, we often have multiple services of the same type or non-class values (like strings, config objects) to inject.
+If Angular relied only on the type of the class, it wouldn't know which service to inject when multiple services share the same structure.
+Hence, Injection Tokens solve this by acting like custom identifiers (keys) for DI.
+
+Example: Basic Token-Based Service Injection
+1. Create Two Services
+code:
+// log-message-one.service.ts
+export class LogMessageOneService {
+  log(): void {
+    console.log('This is log message from service ONE');
+  }
+}
+
+// log-message-two.service.ts
+export class LogMessageTwoService {
+  log(): void {
+    console.log('This is log message from service TWO');
+  }
+}
+2. Use Token in a Component
+code:
+import { Component, inject, OnInit } from '@angular/core';
+import { LogMessageOneService } from './services/log-message-one.service';
+import { LogMessageTwoService } from './services/log-message-two.service';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  providers: [
+    {
+      provide: 'LOGGER',         // 🔑 Token (String token in this case)
+      useClass: LogMessageOneService // 👈 You can switch to LogMessageTwoService here
+    }
+  ]
+})
+export class AppComponent implements OnInit {
+  logger = inject<any>('LOGGER'); // 💡 Injecting by token instead of class type
+
+  ngOnInit() {
+    this.logger.log();
+  }
+}
+You can easily switch between different implementations by changing the useClass:
+
+code:
+useClass: LogMessageTwoService
+
+Types of Tokens
+
+Token Type	       Description
+Type Token	    Usually a class type. Most common.
+String Token	Simple string used as a key (not recommended for large apps due to possible collisions).
+InjectionToken	Strongly typed and unique object token (preferred for complex scenarios).
+
+
+
+Property	Purpose
+useClass	Use a specific class to create a new instance
+useValue	Provide a constant or config object
+useExisting	Use an existing service instance
+useFactory	Use a factory function to return a value/service
+We’ll dig into these in upcoming examples.
+
+
+Questions:
+
+What are injection tokens in Angular?
+Tokens uniquely identify a dependency in Angular’s DI system, especially useful when multiple providers or non-class values are used.
+
+What is the use of useClass?
+Specifies the class to be instantiated when a dependency associated with the token is requested.
+
+What’s the difference between provide and useClass?
+provide: Specifies the token (the unique key).
+useClass: Specifies the implementation (class) to be used when the token is injected.
+
+What happens if the same token is used with multiple useClass values?
+Angular will use the last one defined in the providers array. Earlier ones will be overridden.

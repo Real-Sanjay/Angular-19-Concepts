@@ -1,0 +1,90 @@
+What is Defer in Angular?
+Defer is a new template syntax in Angular that allows you to lazy-load parts of your component's template.
+It improves performance by:
+Loading essential resources first (small main bundle).
+Loading non-essential resources later only when needed.
+
+It separates two stages:
+Prefetching: Load the code/data quietly in the background.
+Rendering: Actually show the component only when triggered (like a click, scroll, or hover).
+Basic Defer Usage Example:
+
+Inside app.component.html:
+<p>Component is loading...</p>
+
+@defer {
+  <app-test></app-test>
+}
+
+Here, app-test will be deferred — it will not be part of the main bundle but loaded separately later.
+
+What Happens Internally?
+Angular creates a separate JavaScript chunk for the deferred component (test.component).
+Main bundle loads faster because it's lighter.
+The deferred chunk is loaded only after the main app is stable or based on user interaction (if configured).
+You can see this in DevTools → Network → Chunks (new chunk for test component loaded later).
+
+
+
+ 1. @placeholder block (before loading starts)
+Purpose: Show temporary content (like "Loading..." or spinner) before the deferred component starts loading.
+
+Syntax:
+
+@defer {
+  @placeholder (minimum: 3000) {
+    <h4>Content is getting loaded...</h4>
+  }
+  <app-test></app-test>
+}
+Important:
+Placeholder content is eagerly loaded (comes with the main bundle).
+Keep it simple and lightweight (no heavy components inside placeholder).
+minimum: Minimum time (ms or sec) for which the placeholder must stay visible.
+
+
+2. @loading block (while content is loading)
+Purpose: Show a message while the deferred component is being loaded, after the placeholder.
+
+Syntax:
+@defer {
+  @placeholder (minimum: 3000) {
+    <h4>Content is getting loaded...</h4>
+  }
+  @loading (minimum: 2000, after: 1000) {
+    <h5>Loading component...</h5>
+  }
+  <app-test></app-test>
+}
+
+Important:
+minimum: Time for which loading content must stay visible once shown.
+after: Wait time after loading starts before showing loading content (to avoid flickering if loading is very fast).
+Real use case: Smooth loading experience if network is slow.
+
+3. @error block (if loading fails)
+Purpose: Show an error message if deferred component fails to load (like network error).
+
+Syntax:
+@defer {
+  @placeholder (minimum: 3000) {
+    <h4>Content is getting loaded...</h4>
+  }
+  @loading (minimum: 2000) {
+    <h5>Loading component...</h5>
+  }
+  @error {
+    <p>Something went wrong. Please try again later!</p>
+  }
+  <app-test></app-test>
+}
+Important:
+Error content is eagerly loaded.
+The @error block shows only if deferred chunk fails to download (you can simulate this by blocking network requests).
+
+Summary Table:
+
+Block	        When It Shows	                        Notes
+@placeholder	Before defer loading starts	            Shown always for a minimum duration
+@loading	    While defer is loading (after a wait)	Prevents flickering
+@error	        If defer loading fails	                Must be simple; dependencies eagerly loaded

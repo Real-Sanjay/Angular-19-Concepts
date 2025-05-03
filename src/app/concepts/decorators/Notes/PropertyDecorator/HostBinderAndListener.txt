@@ -1,0 +1,99 @@
+1. What is @HostBinding in Angular?
+➤ Definition
+@HostBinding is a property decorator used inside directives or components to bind a property of the host element (the element the directive/component is applied to).
+
+➤ Use Case
+To dynamically apply styles, classes, attributes, or properties on the host DOM element from within the directive/component.
+
+Example
+code:
+@Directive({
+  selector: '[appHighlight]'
+})
+export class HighlightDirective implements OnInit {
+  @HostBinding('style.backgroundColor') bgColor?: string;
+  @HostBinding('style.color') textColor?: string;
+
+  ngOnInit() {
+    this.bgColor = '#F2A4CF';
+    this.textColor = '#101820';
+  }
+}
+Usage in template:
+<div appHighlight>
+  This div has background and text color from HostBinding!
+</div>
+
+
+2. What is @HostListener in Angular?
+➤ Definition
+@HostListener is a method decorator that allows you to listen to events on the host element and run custom methods when those events occur.
+
+Example with Toggle Logic
+code:
+@Directive({
+  selector: '[appHighlight]'
+})
+export class HighlightDirective {
+  @HostBinding('style.backgroundColor') bgColor = '#F2A4CF';
+  @HostBinding('style.color') textColor = '#101820';
+
+  @HostListener('click')
+  onToggle() {
+    if (this.bgColor === '#F2A4CF') {
+      this.bgColor = '#101820';
+      this.textColor = '#F2A4CF';
+    } else {
+      this.bgColor = '#F2A4CF';
+      this.textColor = '#101820';
+    }
+  }
+}
+Usage:
+<div appHighlight>
+  Click me to toggle my colors!
+</div>
+
+
+Random Color Example with @HostListener
+➤ Enhancing Interactivity with Random Colors
+code:
+@Directive({
+  selector: '[appHighlight]'
+})
+export class HighlightDirective {
+  @HostBinding('style.backgroundColor') bgColor = '#F2A4CF';
+  @HostBinding('style.color') textColor = '#ccc';
+
+  private colors = ['#FF5733', '#33FFCE', '#FFC300', '#DAF7A6'];
+
+  @HostListener('click')
+  setRandomColor() {
+    const colorPick = this.colors[Math.floor(Math.random() * this.colors.length)];
+
+    if (this.bgColor !== colorPick) {
+      this.bgColor = colorPick;
+    } else {
+      this.setRandomColor(); // retry if same color
+    }
+  }
+}
+
+Summary
+
+Feature	        @HostBinding	                                             @HostListener
+Type	        Property decorator	Method decorator
+Purpose	        Bind properties/styles/attributes to the host element	     Listen to events on the host element
+Usage	        Dynamically update styles/classes	                         Execute logic on click, focus, blur, etc.
+Real-World Use	Toggle classes, update style, add accessibility props	     Animate on click, track mouse events, toggle themes
+
+Common Questions
+What is the difference between @HostBinding and @HostListener?
+@HostBinding binds a property/attribute to the host element. @HostListener listens to events on the host element and triggers methods in response.
+
+Where are these decorators usually used?
+Mostly inside custom directives for adding behavior and styles to HTML elements dynamically.
+
+Can you give an example use case for both together?
+You can create a directive that changes background color on mouse hover using @HostBinding and @HostListener.
+

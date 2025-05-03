@@ -1,0 +1,54 @@
+What are Parameter Decorators in Angular?
+➤ Definition
+Parameter decorators are used to decorate the parameters of a constructor, usually to inject dependencies like services into a component or directive.
+
+They are part of Angular’s Dependency Injection (DI) system.
+
+Why Use Them?
+To tell Angular what dependency to inject (like a service) when creating a class instance. Angular uses these decorators to resolve and provide instances of classes automatically.
+
+Example Using @Inject()
+Angular automatically injects services based on the type of the constructor parameter, but @Inject() is useful when:
+You want to inject a value using a token instead of a class.
+You’re injecting non-class-based dependencies like strings, objects, or constants.
+
+import { Component, Inject } from '@angular/core';
+import { LoggerService } from './logger.service';
+import { APP_VERSION } from './app.tokens'; // A token we define manually
+
+@Component({
+  selector: 'app-example',
+  template: `<p>Check the console!</p>`
+})
+export class ExampleComponent {
+  constructor(
+    private logger: LoggerService,
+    @Inject(APP_VERSION) private version: string
+  ) {
+    this.logger.log('App version:', this.version);
+  }
+}
+
+What's Happening?
+LoggerService is injected by type.
+
+APP_VERSION is injected using the @Inject() parameter decorator, because it is a token for a string value.
+
+💡 Real-World Use Case: Configurable Values
+Define a token:
+import { InjectionToken } from '@angular/core';
+
+export const API_URL = new InjectionToken<string>('API_URL');
+Provide it in a module:
+
+@NgModule({
+  providers: [
+    { provide: API_URL, useValue: 'https://api.example.com' }
+  ]
+})
+export class AppModule {}
+Inject it using a parameter decorator:
+constructor(@Inject(API_URL) private apiUrl: string) {
+  console.log('API URL:', this.apiUrl);
+}
+

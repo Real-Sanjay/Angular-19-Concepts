@@ -1,0 +1,90 @@
+What Are Custom Pipes in Angular?
+Custom Pipes are user-defined pipes used to create more advanced or specific transformations on template data, especially when the built-in pipes aren’t enough.
+
+Why Use Custom Pipes?
+We use them when:
+We want to reuse transformation logic in multiple places
+Built-in pipes don’t meet our requirements (e.g., sorting, filtering, pagination)
+We need more control over the logic, like appending text, calculating power/exponent, etc.
+
+How to Create a Custom Pipe
+Step 1: Generate a Pipe
+ng generate pipe appendText
+OR shorthand:
+ng g p appendText
+
+This creates:
+append-text.pipe.ts
+append-text.pipe.spec.ts
+
+Step 2: Define the Pipe
+code:
+// append-text.pipe.ts
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+  name: 'appendText'
+})
+export class AppendTextPipe implements PipeTransform {
+  transform(value: string, suffixVal: string): string {
+    return value + suffixVal;
+  }
+}
+
+Explanation:
+@Pipe decorator registers the pipe with Angular.
+name: 'appendText' is the pipe name used in templates.
+PipeTransform interface enforces the transform() method.
+transform() takes:
+value → input from the template
+suffixVal → an argument from the template
+and returns the result
+
+Using the Custom Pipe in the Template
+<h2 style="text-align: center;">
+  {{ "Hello Sanjay" | appendText:", welcome to Angular Pipes!" }}
+</h2>
+
+Output:
+Hello Sanjay, welcome to Angular Pipes!
+
+🎯 Real-World Example Ideas
+
+
+Breakdown of Custom Pipe Key Concepts
+@Pipe Decorator
+Purpose: Registers the pipe with Angular and provides metadata.
+
+code:
+@Pipe({
+  name: 'appendText'
+})
+Can optionally include:
+pure: true/false – controls whether Angular should re-evaluate it frequently (default is true for performance).
+
+PipeTransform Interface
+Defines the required transform() method.
+
+code:
+export class AppendTextPipe implements PipeTransform {
+  transform(value: string, suffix: string): string {
+    return value + suffix;
+  }
+}
+It enforces a standard structure for all pipes.
+Helps Angular know that your class is a valid pipe.
+
+MCQ  Questions
+Q1: What is the purpose of the @Pipe decorator?
+A: It provides metadata to Angular, such as the name of the pipe, and allows the pipe to be registered and used in templates.
+
+Q2: What is the role of the PipeTransform interface?
+A: It enforces the implementation of the transform() method, which contains the transformation logic for a custom pipe.
+
+Q3: Can a pipe take multiple arguments?
+A: Yes. The transform() method can accept multiple parameters beyond the initial value.
+
+Q4: Can you chain custom pipes like built-in pipes?
+A: Yes, just like built-in pipes, custom pipes can be chained.
+
+{{ 'Sanjay' | appendText:' dev' | uppercase }}

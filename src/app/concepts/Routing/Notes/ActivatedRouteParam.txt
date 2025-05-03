@@ -1,0 +1,88 @@
+ActivatedRoute & Route Parameters in Angular
+When navigating to a route like /employees/101/John, and you want to fetch those values (101 and John) inside the component, you use ActivatedRoute.
+
+What is ActivatedRoute?
+ActivatedRoute is a service that gives access to information about the current route, such as
+Route parameters (e.g., /employees/:id)
+Query parameters (e.g., ?status=active)
+Route data (static metadata)
+Route fragments (#section1)
+
+ Step-by-Step Example: Fetch Employee by ID and Name
+Step 1: Define the Route with Parameters
+code
+// app-routing.module.ts
+{ path: 'employees/:id/:name', component: EmployeesComponent }
+
+Step 2: Fetch Parameters in Component
+code
+// employees.component.ts
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+
+@Component({
+  selector: 'app-employees',
+  templateUrl: './employees.component.html'
+})
+export class EmployeesComponent implements OnInit {
+  id!: string;
+  name!: string;
+
+  constructor(private route: ActivatedRoute) {}
+
+  ngOnInit(): void {
+    const params = this.route.snapshot.params;
+    this.id = params['id'];
+    this.name = params['name'];
+
+    console.log('ID:', this.id);
+    console.log('Name:', this.name);
+  }
+}
+
+
+Step 3: Display in Template
+<!-- employees.component.html -->
+<h2>Employee Details</h2>
+<p><strong>ID:</strong> {{ id }}</p>
+<p><strong>Name:</strong> {{ name }}</p>
+
+Step 4: Add Router Outlet
+
+<!-- app.component.html -->
+<router-outlet></router-outlet>
+
+Navigate to the Route
+In browser:
+
+http://localhost:4200/employees/101/John
+Output:
+ID: 101
+Name: John
+Console:
+ID: 101
+Name: John
+
+
+Quick Recap of Concepts
+❓ Q1: How can you fetch the currently activated route info?
+By injecting ActivatedRoute in the component and accessing:
+
+code
+this.route.snapshot.params['id']
+❓ Q2: What is the snapshot?
+The snapshot is a static representation of the route info at the moment the component is loaded.
+
+It doesn’t update if the route changes while the component is still loaded.
+
+Use snapshot when you’re sure route parameters won't change after initial load.
+
+❓ Q3: When is snapshot preferred?
+When you load data once during component init, like:
+
+Fetching a blog post by ID
+
+Fetching employee details
+
+Viewing a product page
+

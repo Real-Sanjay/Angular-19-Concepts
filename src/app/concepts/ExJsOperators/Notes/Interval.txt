@@ -1,0 +1,47 @@
+RxJS interval() Operator
+Purpose:
+The interval() function creates an observable that emits an infinite sequence of ascending integers, starting from 0, with each value emitted after a specified time interval (in milliseconds).
+
+Key Points:
+Emits sequential integer values (0, 1, 2, 3...) at regular time intervals.
+Returns an infinite observable — does not complete unless explicitly unsubscribed.
+First value is emitted after the initial interval delay (not immediately).
+Useful for polling, scheduling, timers, and animation in UI applications.
+
+Basic Example:
+import { interval } from 'rxjs';
+
+const observable$ = interval(1000); // emits every 1000ms (1 sec)
+
+const subscription = observable$.subscribe(value => {
+  console.log(value); // 0, 1, 2, 3...
+});
+
+Unsubscribing (to prevent memory leaks):
+Since interval() emits indefinitely, unsubscribing is essential.
+
+import { interval } from 'rxjs';
+const observable$ = interval(1000);
+const subscription = observable$.subscribe(val => {
+  console.log(val);
+});
+
+setTimeout(() => {
+  subscription.unsubscribe();
+  console.log("Unsubscribed");
+}, 5000); // Unsubscribe after 5 seconds
+Output:
+0
+1
+2
+3
+4
+Unsubscribed
+
+Use Cases:
+Task schedulers (e.g. auto-saving forms every 30 seconds)
+Countdown timers or stopwatches
+Periodic polling of APIs
+Trigger animations or game state updates
+Background jobs or heartbeat signals
+

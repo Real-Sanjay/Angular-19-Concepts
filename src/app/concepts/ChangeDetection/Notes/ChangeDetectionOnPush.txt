@@ -1,0 +1,106 @@
+OnPush Change Detection Strategy 
+
+What is ChangeDetectionStrategy.OnPush?
+It’s an opt-in mechanism that tells Angular:
+
+“Only run change detection for this component when specific conditions are met.”
+By default, Angular uses ChangeDetectionStrategy.Default, which runs change detection:
+
+For the component
+And all its child components
+On any event (clicks, timers, HTTP responses, etc.)
+
+OnPush Fires Change Detection Only When:
+Trigger Type	                                Explanation
+@Input() value changes	                        Only reference changes, not internal mutations
+DOM events                                      (e.g., (click), (input))  bound inside the component
+Observable with async pipe	                    When a new value is emitted
+Manually via ChangeDetectorRef.markForCheck()	Forces CD in special cases
+Signals	                                        When updated, trigger only relevant component updates (ideal with OnPush)
+
+Behavior Illustration
+Let’s say you have this component:
+
+@Component({
+  selector: 'app-counter',
+  templateUrl: './counter.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class CounterComponent {
+  @Input() count!: number;
+}
+
+Now, Angular will not update this component when:
+A sibling or parent component triggers change detection
+Internal object properties are mutated (this.obj.val = 5) instead of being reassigned (this.obj = { val: 5 })
+
+This ensures the component is re-evaluated only when it absolutely needs to be.
+
+Best Practices with OnPush
+Always Use Immutable Data Structures
+
+
+// ✅ Good: triggers OnPush CD
+this.items = [...this.items, newItem];
+
+// ❌ Bad: won’t trigger CD in OnPush
+this.items.push(newItem);
+Avoid Mutating @Input() Properties
+Reassign instead of mutate to ensure CD is triggered:
+
+@Input() user!: { name: string };
+
+// Instead of mutating...
+this.user.name = 'Sanjay';
+
+// Reassign the whole object
+this.user = { ...this.user, name: 'Sanjay' };
+Use Observables + async Pipe
+Let Angular subscribe/unsubscribe automatically and detect changes:
+
+<div *ngIf="user$ | async as user">{{ user.name }}</div>
+Combine with Signals
+Signals paired with OnPush provide fine-grained reactivity.
+
+Avoid Complex Logic in Templates
+Especially important with OnPush, since template expressions aren’t constantly re-evaluated.
+
+⚠️ When Not to Use OnPush
+Simple apps with few components
+
+Apps that heavily rely on mutation without observable state
+
+When you don’t want to track every reference change
+
+🧠 Summary Table
+Feature	                            Default Strategy	OnPush Strategy
+CD runs on all async events	               ✅	            ❌
+Child CD on parent update	               ✅	            ❌ (unless input changes)
+Requires immutability	                   ❌	            ✅
+Suitable for large apps	                   ❌	            ✅
+Detects input reference change	           ✅	            ✅
+Detects input mutation	                   ✅	            ❌
+
+
+
+Key Takeaways on ChangeDetectionStrategy.OnPush in Angular
+1. What Triggers Change Detection in OnPush Components?
+Angular will only check an OnPush component when:
+An @Input() property of the component changes (by reference, not just value).
+An event is emitted from inside the component (e.g., click, keypress).
+You manually trigger change detection via ChangeDetectorRef.markForCheck() or similar.
+An observable bound via the async pipe emits a new value.
+
+2. Why OnPush Helps Performance
+Avoids re-checking the entire component tree on every event.
+Angular skips checking components if their inputs haven't changed.
+Reduces CPU usage and DOM manipulations, especially useful in large and deeply nested component trees.
+
+3. Common Misunderstandings
+Setting OnPush on a parent component does not stop child components from being evaluated if the child isn't also using OnPush.
+Change detection is not fully stopped—Angular just becomes more selective about when it runs.
+
+Optimization Tip
+If you're passing an object as an input, and you mutate the object without changing its reference, OnPush won't detect the change. So prefer immutable patterns (e.g., using the spread operator) to ensure change detection is triggered:
+
+this.messages = [...this.messages, newMessage]; // triggers OnPush

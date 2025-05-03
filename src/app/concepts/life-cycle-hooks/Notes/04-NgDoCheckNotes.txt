@@ -1,0 +1,78 @@
+What is ngDoCheck in Angular?
+ngDoCheck is a lifecycle hook that gets called during every change detection cycle.
+It is used to implement custom change detection logic that Angular’s default mechanism may not catch.
+Unlike ngOnChanges, which only detects changes in @Input() properties, ngDoCheck runs regardless of input changes, giving more manual control.
+
+
+Key Differences: ngOnChanges vs ngDoCheck
+Feature	    ngOnChanges	                                                ngDoCheck
+Triggered	Only on changes to @Input() properties	                    Every change detection cycle
+Parameters	Receives SimpleChanges with current/previous values	        No parameters
+Use Case	Track input changes easily	                                Custom detection (deep objects/arrays)
+Efficiency	Lightweight	                                                Can be performance-intensive if misused
+Complexity	Simple and declarative	                                    Manual comparison logic needed
+Can Be Used Together?	❌ Not recommended – can lead to complex behavior and bugs	
+
+💡 When to Use ngDoCheck
+Use it when:
+You need to detect deep changes in nested objects or arrays.
+External libraries mutate component state outside of Angular’s detection.
+You are manually managing component state that isn't passed as @Input.
+
+🧪 Example Scenario: Object Property Change Not Detected by ngOnChanges
+code:
+@Input() user: { name: string };
+
+ngOnChanges(changes: SimpleChanges) {
+  console.log("ngOnChanges", changes);
+}
+
+// Won't detect when only `user.name` changes without changing the reference
+Use ngDoCheck instead:
+
+code:
+ngDoCheck() {
+  if (this.user.name !== this.previousUserName) {
+    console.log("User name changed");
+    this.previousUserName = this.user.name;
+  }
+}
+
+📚 How to Detect Array Changes Using ngDoCheck
+code:
+items = [1, 2, 3];
+previousItems = [...this.items];
+
+ngDoCheck() {
+  if (this.items.length !== this.previousItems.length) {
+    console.log("Array changed");
+    this.previousItems = [...this.items];
+  }
+}
+
+❓ Can ngDoCheck Replace ngOnChanges?
+Not entirely. While it can be used for more complex detection, ngOnChanges is:
+Easier to use
+Provides SimpleChanges object
+More efficient when you just want to track @Input() changes
+Use ngDoCheck only when necessary.
+
+🎯 Interview Cheat Sheet
+1.What is ngDoCheck?
+Custom change detection hook.
+Called on every detection cycle.
+
+2.Difference from ngOnChanges?
+ngOnChanges: For @Input() only.
+ngDoCheck: Manual detection for any changes.
+
+Use case examples:
+Deep object/array mutations.
+External library side effects.
+
+3.Array/Object comparison?
+Use deep comparison or .length, JSON stringify, etc.
+
+Best practices?
+Avoid using ngOnChanges & ngDoCheck together.
+Be careful of performance (as it runs every cycle).

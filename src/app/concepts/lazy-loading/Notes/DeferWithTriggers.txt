@@ -1,0 +1,73 @@
+@defer + Triggers
+When you use @defer {} in Angular, you can control when the deferred (lazy) content starts loading using Triggers.
+
+Built-in Triggers in @defer
+
+Trigger Name	                                                            Meaning	Example Use Case
+on idle	Wait until browser is idle (default trigger)	                    After page fully loads and is free, load extra content.
+on viewport	When element appears inside visible screen (viewport)	        Load components only when user scrolls down.
+on interaction	When user interacts (click, keypress) with a given element	Load something when user clicks a button.
+on hover	When user hovers mouse over an element	                        Load user details when hovering on user name.
+on immediate	Load immediately as soon as page renders	                Load a banner or message immediately.
+on timer	Load after a certain delay (time based)                     	Load suggestions after 3 seconds of staying idle.
+
+
+One Line Concept of Each
+on idle ➔ Wait until browser is relaxed, then load.
+
+on viewport ➔ When you scroll and item comes into view, then load.
+
+on interaction ➔ When you click or press something, then load.
+
+on hover ➔ When you hover mouse over something, then load.
+
+on immediate ➔ Load immediately, no waiting.
+
+on timer ➔ Load after specific number of seconds/milliseconds.
+
+
+Practical Example
+
+@defer (on idle) {
+  <h2>Load content when browser is idle</h2>
+}
+
+@defer (on viewport) {
+  <h2>Load content when I scroll here!</h2>
+}
+
+@defer (on interaction showButton) {
+  <h2>Load when I click the "Show" button</h2>
+}
+<button #showButton>Show</button>
+
+@defer (on hover userCard) {
+  <h2>Load when mouse hovers over this card!</h2>
+}
+<div #userCard>Hover over me!</div>
+
+@defer (on immediate) {
+  <h2>Load immediately after render</h2>
+}
+
+@defer (on timer 3000) {
+  <h2>Load after 3 seconds</h2>
+}
+
+Note:
+If you use on viewport without a placeholder, Angular will give an error.
+
+Solution: either give a @placeholder block, or pass a reference to an element like on viewport elementRef.
+
+@loading can help show a spinner/message during the waiting period.
+
+ Why triggers are useful?
+ They optimize page speed by loading content only when needed.
+ They reduce initial loading time by not loading everything immediately.
+ They improve user experience by showing quick visible parts first and lazy loading the rest.
+
+
+Without defer                   With defer
+Load everything at once	        Load only important first, rest later
+Slow first load	                Fast first load
+Heavy DOM memory	            Light DOM memory initially

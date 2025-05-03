@@ -1,0 +1,85 @@
+ Lazy Loading vs Eager Loading in Angular
+
+What is Eager Loading?
+Default behavior in Angular.
+All modules/components load immediately when the application starts.
+
+Pros:
+Easy to set up.
+
+Cons:
+Can slow down the initial load time if app is large.
+
+What is Lazy Loading?
+Modules/components are loaded only when needed.
+Improves initial load speed by keeping the starting bundle size smaller.
+
+Useful for:
+Feature modules
+Heavy components
+Less frequently used parts (admin panels, settings, dashboards)
+
+Angular's New Feature: Lazy Loading Standalone Components (since Angular 14+)
+Earlier, Angular supported lazy loading only for modules.
+Now, standalone components can also be lazy-loaded!
+
+ Example
+Create two components: FirstComponent and SecondComponent.
+
+Define routes:
+/first → FirstComponent (eager)
+/second → SecondComponent (lazy)
+
+How to Configure Lazy Loading for Components
+Eager Loading (default way):
+code:
+{
+  path: 'first',
+  component: FirstComponent
+}
+Lazy Loading using loadComponent:
+code:
+{
+  path: 'second',
+  loadComponent: () => import('./second/second.component').then(m => m.SecondComponent)
+}
+loadComponent returns a Promise which resolves to the component.
+Load only when the route is activated!
+
+Important Rule
+Don't use both component and loadComponent in the same route.
+If you do, you'll get this error:
+
+Invalid configuration of route. Component and loadComponent cannot be used together.
+
+How to See Lazy Loading in Action
+Open DevTools → Network → JS.
+
+Initially:
+Only first component's chunk is loaded.
+After clicking the second component's button:
+Second component's chunk is downloaded on demand.
+
+Once loaded, it's cached. No second download unless you hard-refresh the page.
+
+When to Use Lazy Loading
+Scenario	                                     Recommendation
+Core functionality (Login, Home)	             Eager load
+Feature modules (Settings, Admin Panel)	         Lazy load
+Rarely used routes (Reports, Advanced settings)	 Lazy load
+
+Overusing lazy loading can backfire if not planned properly because it may introduce small loading delays when the user navigates for the first time.
+
+In Short:
+
+Eager Loading	                Lazy Loading
+Load everything at startup	    Load on demand
+Bigger initial bundle	        Smaller initial bundle
+Fast navigation later	        Slight delay when navigating for the first time
+Good for critical features	    Good for optional/rarely used features
+
+Final Notes
+Lazy loading improves performance but must be used smartly.
+Use loadComponent for standalone components.
+Always test user experience after applying lazy loading to make sure navigation feels smooth.
+

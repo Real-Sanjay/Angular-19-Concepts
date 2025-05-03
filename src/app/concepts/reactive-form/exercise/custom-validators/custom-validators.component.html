@@ -1,0 +1,16 @@
+<div>
+    <form [formGroup]="nameForm">
+        <div class="mb-2">
+            <label class="mb-1" for="name">name</label>
+            <input class="mb-2" type="text" id="name" formControlName="name" />
+        </div>
+
+        <div class="mb-2">
+            <label class="mb-1" for="password" >url</label>
+            <input class="mb-2" type="text" id="name" formControlName="url" placeholder="https:test.com" />
+           @if(nameForm.get('url')?.errors?.['valid'] && nameForm.get('url')?.touched) {
+            <small ng-style="display:block" class="text-danger">inavlid url</small>
+           }
+        </div>
+    </form>
+</div>  

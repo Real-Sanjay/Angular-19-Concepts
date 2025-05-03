@@ -1,0 +1,83 @@
+Route redirection allows you to automatically navigate a user from one path to another, typically used to:
+Define default routes
+Handle unmatched URLs (fallback)
+Guide users to specific child components
+
+Basic Syntax
+
+{ path: '', redirectTo: '/home', pathMatch: 'full' }
+🔸 Properties Explained:
+
+Property	Purpose
+path	    URL path to match (can be empty, specific, or wildcard)
+redirectTo	The path to which the user should be redirected
+pathMatch	Strategy to match the route - either full or prefix
+
+Real Example
+Let’s say we have the following component structure:
+AppComponent
+HomeComponent
+ProductsComponent
+ShirtsComponent
+
+We want:
+
+/ → redirect to /home
+
+/products → redirect to /products/shirts
+
+Any wrong path → redirect to /home
+
+Routes Setup (app.routes.ts)
+
+import { Routes } from '@angular/router';
+import { HomeComponent } from './home/home.component';
+import { ProductsComponent } from './products/products.component';
+import { ShirtsComponent } from './products/shirts/shirts.component';
+
+export const routes: Routes = [
+  { path: '', redirectTo: '/home', pathMatch: 'full' }, // default route
+  { path: 'home', component: HomeComponent },
+  {
+    path: 'products',
+    component: ProductsComponent,
+    children: [
+      { path: '', redirectTo: 'shirts', pathMatch: 'full' }, // redirect inside products
+      { path: 'shirts', component: ShirtsComponent }
+    ]
+  },
+  { path: '**', redirectTo: '/home' } // wildcard/fallback route
+];
+
+Important Notes
+pathMatch: 'full' ensures the entire path must match exactly.
+pathMatch: 'prefix' checks if the beginning of the URL matches.
+For default child routes, use empty string '' as the path under the parent with redirectTo.
+For fallback, use ** as the path (wildcard).
+
+Output Behavior
+Visiting / → Redirects to /home
+Visiting /products → Redirects to /products/shirts
+Visiting /unknown → Redirects to /home
+
+Common Questions & Answers
+Q1. What is the purpose of the redirectTo property?
+The redirectTo property tells the router to automatically navigate to a different path when a specific route is matched.
+
+Q2. What does pathMatch do and why is it important?
+pathMatch determines how Angular matches a route:
+
+full → Matches the whole path (commonly used in root redirects).
+
+prefix → Matches if the URL starts with the path.
+
+Without it, redirection may not work correctly.
+
+Q3. What is a wildcard route and how is it used?
+A wildcard route ({ path: '**', redirectTo: '/home' }) catches all unmatched routes and redirects the user, often to a fallback like the Home or NotFound component.
+
+Q4. Can I have multiple redirects?
+Yes. You can have multiple redirect routes, e.g., one for /, one for /products, and a wildcard for fallback.
+
+Pro Tip
+Always place the wildcard route at the end of your routes array — Angular checks routes top-down and matches the first one that fits.

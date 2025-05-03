@@ -1,0 +1,61 @@
+🧱 @NgModule() — Explained with Real Example
+Although Angular 17 and above use standalone components, many large projects still use modules or hybrid setups. So understanding @NgModule is still very important.
+
+Here’s how an @NgModule looks in code:
+
+code:
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { AppComponent } from './app.component';
+import { DemoComponent } from './demo/demo.component';
+import { MyService } from './services/my.service';
+
+@NgModule({
+  declarations: [
+    AppComponent,
+    DemoComponent    // ✅ Declaring the component
+  ],
+  imports: [
+    BrowserModule     // ✅ Importing built-in module
+  ],
+  providers: [
+    MyService         // ✅ Providing a service
+  ],
+  bootstrap: [
+    AppComponent      // ✅ Setting root component
+  ]
+})
+export class AppModule {}
+📦 NgModule Properties (Quick Summary)
+
+Property	    Description
+declarations	List of components, directives, and pipes that belong to this module
+imports	Other   modules to bring their exported components/directives/services
+providers	    Services or guards available to this module (used in DI)
+bootstrap	    Root component to load when app starts
+
+
+Real-World Analogy
+Think of @NgModule() like a container or toolbox that holds:
+Tools (components)
+Other toolboxes (imported modules)
+Utility services (providers)
+Entry tool (bootstrap component)
+
+So Angular knows how to assemble your application and where to start.
+⚡ Why Learn NgModule Even with Angular 17?
+Although Angular 17 introduced standalone components, here's why NgModule is still useful:
+
+You’ll find it in most enterprise projects
+It’s essential for:
+Lazy loading modules
+Shared modules
+Organizing big applications
+Some third-party libraries still rely on it
+
+✅ Summary
+@NgModule() is a class decorator used to define a module in Angular.
+Even though Angular 17+ supports standalone components, learning NgModule is important.
+It helps organize and register components, services, and other dependencies.
+Core properties: declarations, imports, providers, and bootstrap.
+

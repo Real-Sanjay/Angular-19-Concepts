@@ -1,0 +1,65 @@
+What is Change Detection?
+Change detection is the internal Angular process that ensures the DOM reflects the current state of application data.
+Automatically checks for changes when:
+User events occur (e.g., clicks)
+Asynchronous operations complete (e.g., HTTP calls)
+Timers or observable streams update data
+Angular uses Zone.js to know when asynchronous tasks are done and need change detection.
+
+Zone.js – The Underlying Mechanism
+Zone.js monkey patches async APIs like setTimeout, Promise, addEventListener, etc.
+It notifies Angular when a task completes, triggering the change detection cycle.
+Acts as a watchdog for any mutation that could affect the view.
+
+Change Detection in Action – Component Tree
+Angular walks through the component tree from top (root) to bottom.
+It evaluates all data-bound expressions in templates ({{ }}, [property], (event)).
+If a new value ≠ previous value → Angular updates the DOM.
+
+Developer Tip: Getter Triggers
+
+get countLabel() {
+  console.log('Counter evaluated');
+  return this.count();
+}
+If you bind this in the template: {{ countLabel }}, Angular re-evaluates it every time change detection runs.
+
+❗ Avoid using getters for complex logic in templates.
+
+
+Double Detection in Dev Mode
+Why Logs Appear Twice? in Dev Mode
+Development mode runs change detection twice:
+First pass: Apply changes
+Second pass: Validate if values remain the same
+
+Purpose: Catch unexpected side-effects that alter values after change detection
+
+Example: Math.random in Template
+
+get randomValue() {
+  return Math.random();
+}
+Used in template like:
+
+<p>{{ randomValue }}</p>
+Triggers:
+ExpressionChangedAfterItHasBeenCheckedError
+Because:
+
+First pass: 0.32745
+Second pass: 0.65793 (different!)
+
+random = Math.random();
+get randomValue() {
+  return this.random;
+}
+
+Production vs Development Mode
+Mode	    Behavior	  Purpose
+Development	Double change detection	Error detection and debugging
+Production	Single change detection	Performance
+
+In production builds:
+Logs aren't repeated
+No expression error unless real inconsistency occurs

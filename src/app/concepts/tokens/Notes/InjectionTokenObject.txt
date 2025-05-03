@@ -1,0 +1,89 @@
+What is an InjectionToken in Angular?
+An InjectionToken is a type-safe and object-based token used to inject non-class dependencies into components, services, or other injectables.
+It is Angular’s way of letting you inject anything that’s not a class, like:
+Strings
+Booleans
+Numbers
+Config objects
+Interface-based values
+
+ Why Use InjectionToken?
+String tokens are prone to name collisions (e.g., two strings named 'CONFIG').
+InjectionToken makes it type-safe and unique.
+It gives better IDE support (auto-complete, type checking).
+It's a best practice in large-scale or enterprise Angular apps.
+
+Syntax for Creating an InjectionToken
+📁 dependencies/injection-token.ts
+
+import { InjectionToken } from '@angular/core';
+import { LogMessageOneService } from '../services/log-message-one.service';
+
+export const LOG_MSG_ONE = new InjectionToken<LogMessageOneService>('LogMessageOne');
+InjectionToken<LogMessageOneService> is the type of what this token represents.
+
+'LogMessageOne' is just a description — optional, but helpful for debugging.
+
+ How to Use it in a Component or Service
+In app.component.ts
+code:
+import { Component, Inject, OnInit } from '@angular/core';
+import { LogMessageOneService } from './services/log-message-one.service';
+import { LOG_MSG_ONE } from './dependencies/injection-token';
+
+@Component({
+  selector: 'app-root',
+  template: `<h1>Check console</h1>`,
+  providers: [
+    { provide: LOG_MSG_ONE, useClass: LogMessageOneService }
+  ]
+})
+export class AppComponent implements OnInit {
+
+  constructor(@Inject(LOG_MSG_ONE) private logger: LogMessageOneService) {}
+
+  ngOnInit(): void {
+    this.logger.log();
+  }
+}
+@Inject(LOG_MSG_ONE) tells Angular:
+“Inject whatever provider was registered for this injection token.”
+
+Real-World Use Case Example
+Let’s say you have an app-wide configuration:
+app-config.ts
+code:
+export interface AppConfig {
+  apiUrl: string;
+  enableDebug: boolean;
+}
+app.tokens.ts
+code:
+import { InjectionToken } from '@angular/core';
+import { AppConfig } from './app-config';
+
+export const APP_CONFIG = new InjectionToken<AppConfig>('app.config');
+Register it in AppModule:
+code:
+providers: [
+  {
+    provide: APP_CONFIG,
+    useValue: {
+      apiUrl: 'https://api.example.com',
+      enableDebug: true
+    }
+  }
+]
+
+Use it in a service:
+code:
+constructor(@Inject(APP_CONFIG) private config: AppConfig) {
+  console.log(config.apiUrl);  // Outputs the injected value
+}
+📌 Summary Table
+
+Concept	                Purpose
+InjectionToken<T>()	    Creates a type-safe unique token for non-class dependencies
+useClass	            When you want to inject a class-based dependency
+useValue	            When you want to inject a value (string, number, object, etc.)
+@Inject()	            Used when injecting a token (especially non-class ones)

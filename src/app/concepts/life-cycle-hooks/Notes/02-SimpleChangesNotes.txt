@@ -1,0 +1,89 @@
+📌 What is SimpleChanges?
+SimpleChanges is an Angular interface that tracks changes in input properties of a component.
+It is used within the ngOnChanges() lifecycle hook.
+
+Helps access:
+
+🔁 Previous value
+✅ Current value
+📌 First change (Boolean flag)
+
+⚙️ How SimpleChanges Works
+Structure: SimpleChanges is an object with key-value pairs.
+Key = name of the changed @Input() property.
+Value = object with properties: previousValue, currentValue, and firstChange.
+
+Example Setup
+Parent Component (AppComponent)
+code:
+inputValue = 'Initial Value';
+
+updateValue() {
+  this.inputValue = 'Updated Value';
+}
+
+html
+<app-test [inputValue]="inputValue"></app-test>
+<button (click)="updateValue()">Update Value</button>
+
+Child Component (TestComponent)
+Implements OnChanges Interface:
+code:
+
+@Input() inputValue: string;
+previousValue: string | undefined;
+currentValue: string | undefined;
+
+ngOnChanges(changes: SimpleChanges): void {
+  if (changes['inputValue']) {
+    this.previousValue = changes['inputValue'].previousValue;
+    this.currentValue = changes['inputValue'].currentValue;
+  }
+}
+
+Displaying in Template:
+html
+<h2>Previous Value: {{ previousValue }}</h2>
+<h2>Current Value: {{ currentValue }}</h2>
+
+📋 Key Behavior Summary
+Concept	        Description
+previousValue	  Value before the change occurred
+currentValue	  Updated input value
+firstChange	    true if it's the first change since component init
+
+
+❓Frequently Asked Questions
+1. What is SimpleChanges and its purpose?
+It’s an interface that captures the changes in @Input() properties.
+Provides access to previousValue, currentValue, and firstChange.
+
+2. How to access the previous value of an input property?
+changes['inputName'].previousValue
+
+3. How to determine if the value has actually changed?
+Compare previousValue and currentValue.
+If they are equal → No actual change occurred.
+
+4. What happens if input changes multiple times before detection?
+Angular’s change detection runs after certain cycles.
+If the input property is updated multiple times before detection runs:
+Only the latest change is captured.
+Earlier intermediate changes are ignored.
+
+Example:
+this.inputValue = 'First update';
+this.inputValue = 'Second update';
+this.inputValue = 'Third update';
+SimpleChanges will only capture 'Third update' as the current value.
+
+5. Can SimpleChanges detect changes to nested objects or arrays?
+No, not by value changes inside the object/array.
+It can only detect reference changes.
+You need to manually check deep property changes inside.
+
+💡 Summary
+Use ngOnChanges(changes: SimpleChanges) to reactively handle @Input() changes.
+Always check with if (changes['propName']) before accessing.
+Don’t rely on SimpleChanges for internal object/array mutations.
+It’s powerful for tracking parent-to-child communication in Angular apps.

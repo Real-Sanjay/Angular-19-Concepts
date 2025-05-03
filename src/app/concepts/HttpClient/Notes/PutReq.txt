@@ -1,0 +1,69 @@
+HTTP PUT Request in Angular – Update Data
+What is a PUT Request?
+A PUT request is used to replace an existing resource on the server.
+It is idempotent – making the same request multiple times results in the same data on the server.
+You must specify the resource ID in the URL.
+It typically requires the full updated object, not just a partial update (for partial updates, use PATCH).
+
+Example: Update User Data in Angular using HttpClient
+1️⃣ Static PUT Request with Hardcoded ID
+
+
+putData() {
+  const updatedUser = {
+    id: 102,
+    name: 'Updated Name',
+    email: 'updated@example.com'
+  };
+
+  this.http.put('http://localhost:3000/users/102', updatedUser).subscribe(response => {
+    console.log('PUT request successful:', response);
+  });
+}
+2️⃣ Dynamic PUT Request Using user.id
+
+
+putData() {
+  const user = {
+    id: 104,
+    name: 'Dynamic Name',
+    email: 'dynamic@example.com'
+  };
+
+  this.http.put(`http://localhost:3000/users/${user.id}`, user).subscribe(response => {
+    console.log('PUT with dynamic ID successful:', response);
+  });
+}
+3️⃣ Fetch ➝ Modify ➝ PUT (Chained Update)
+
+
+updateUser() {
+  const id = 104;
+  this.http.get<any>(`http://localhost:3000/users/${id}`).subscribe(updatedData => {
+    updatedData.name = 'Modified via GET';
+    updatedData.email = 'modified@example.com';
+
+    this.http.put(`http://localhost:3000/users/${updatedData.id}`, updatedData)
+      .subscribe({
+        next: response => console.log('Updated successfully:', response),
+        error: err => console.error('Update failed:', err)
+      });
+  });
+}
+
+Why Use This Chained Method?
+Useful when you only want to update specific fields.
+Ensures you don’t accidentally overwrite untouched fields.
+
+Avoids hardcoding data in the frontend.
+
+Template Code (for Button)
+
+<button (click)="putData()">Update User</button>
+<button (click)="updateUser()">Fetch & Update</button>
+
+Summary Table
+
+Method	        Use Case	                                Notes
+putData()	    Static or dynamic full object update	    Use when you already have updated data
+updateUser()	Fetch, modify, and send back updated data	Good for updating selective fields safely

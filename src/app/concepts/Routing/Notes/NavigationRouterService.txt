@@ -1,0 +1,48 @@
+ Angular Route Navigation:
+1. Using router.navigate() with Query Parameters:
+Use case: When navigation must happen based on dynamic conditions (e.g., button click, logic inside the component).
+
+How it's done:
+
+code:
+this.router.navigate(['employee-detail'], {
+  queryParams: { id: empId, name: empName }
+});
+
+
+FAQ-style Questions and Answers:
+📌 1. What is the navigate() method and when should it be used?
+The navigate() method is part of Angular's Router service.
+It's used to programmatically navigate to a route from within your TypeScript code.
+
+Use it when:
+You need more control over routing, such as setting query parameters.
+Navigation is based on user actions like button clicks, form submissions, or business logic.
+
+📌 2. How can you navigate to a route with query parameters using the navigate() method?
+Example:
+code:
+this.router.navigate(['employee-detail'], {
+  queryParams: { id: 2, name: 'Sanjay' }
+});
+This will generate a URL like:
+/employee-detail?id=2&name=Sanjay
+
+📌 3. What is the difference between using the navigate() method with query params and using routerLink with query params?
+
+Feature	        routerLink	                                    navigate()
+Approach	    Declarative (used in HTML templates)	        Programmatic (used in TypeScript)
+Use case	    Static or known-at-design-time navigation	    Dynamic or logic-based navigation
+Flexibility	    Less flexible	                                Highly flexible
+Query Params	Set using [queryParams]="{...}"	                Set inside navigate() method
+
+routerLink example:
+<a [routerLink]="['/employee-detail']" [queryParams]="{ id: emp.id, name: emp.name }">View</a>
+
+📌 4. How to clear existing query parameters using navigate()?
+To reset or clear query parameters, pass an empty queryParams object:
+
+code:
+this.router.navigate(['employee-detail'], {
+  queryParams: {}  // clears any existing params
+});

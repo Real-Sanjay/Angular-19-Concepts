@@ -1,0 +1,95 @@
+What are Route Guards?
+Route Guards in Angular protect application routes from unwanted or unauthorized access.
+They act like security checks before entering a route.
+Based on a condition, a guard allows or blocks access.
+
+Types of Route Guards (when you run ng generate guard):
+CanActivate – checks if a route can be activated.
+CanActivateChild – checks if children routes can be activated.
+CanDeactivate – checks if you can leave a route.
+CanLoad – checks before loading lazy-loaded modules.
+CanMatch (newer) – checks if a route configuration should be matched.
+
+How to create a Route Guard?
+ng generate guard your-guard-name
+When you run this, Angular will prompt you to pick which guard you want (ex: CanActivate).
+
+It will generate:
+A .spec.ts (test file)
+A main .ts guard file (where you implement the logic)
+
+✍️ Two Ways to Write Route Guards
+
+Style	                             Use Case
+Class-Based (Old)	                 Good for complex logic with multiple services
+Function-Based (New - Angular 15+)	 Good for simple, cleaner logic
+
+CanActivate Guard — Deep Dive
+Purpose: Checks if a route can be accessed.
+Syntax: Function signature
+
+code:
+export const yourGuardName: CanActivateFn = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+  // Your logic
+  return true or false;
+};
+Parameters:
+route: Snapshot of the route trying to access (route params, query params, etc.)
+state: Snapshot of the entire router state (current URL, etc.)
+
+Returns:
+true → allow navigation
+false → block navigation
+
+OR it can return Observable<boolean> / Promise<boolean> if async check needed.
+
+Simple Example
+1. AdminComponent
+code:
+@Component({
+  selector: 'app-admin',
+  template: `<h1>Admin Area</h1>`,
+})
+export class AdminComponent {}
+2. Admin Route + Guard Setup
+code:
+const routes: Routes = [
+  {
+    path: 'admin',
+    component: AdminComponent,
+    canActivate: [TestGuard], // 👈 Here we add our guard
+  }
+];
+3. Simple Guard File
+code:
+import { CanActivateFn } from '@angular/router';
+
+export const testGuard: CanActivateFn = (route, state) => {
+  return false; // Block navigation
+};
+
+Important Points
+If the guard returns true, navigation proceeds.
+If the guard returns false, navigation is stopped or redirected.
+Multiple Guards can be added:
+
+code:
+canActivate: [AuthGuard, PermissionGuard, TestGuard]
+All guards must return true for the route to activate.
+
+Common  Questions
+
+Question	                    Answer
+What are route guards?	        A way to control access to application routes.
+How does CanActivate work?	    Checks if a user can navigate to a route based on some logic. Returns true or false.
+Can you apply multiple guards?	Yes, you can provide an array of guards in the canActivate property.
+
+Quick Diagram (mental picture)
+User tries to access /admin
+    ↓
+TestGuard executes
+    ↓
+IF TestGuard returns true
+    → Navigate to AdminComponent
+ELSE
+    → Stay on current page or redirect elsewhere

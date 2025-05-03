@@ -1,0 +1,102 @@
+Angular Custom Validators – Deep Understanding
+In Angular, built-in validators like Validators.required, Validators.minLength(), Validators.maxLength(), and Validators.pattern() are super handy for common cases.
+But in real-world applications, sometimes you need validations that are not available out-of-the-box.
+
+For such cases, Angular allows you to create custom validators.
+
+Example 1: Auto-Convert Lowercase to Uppercase (Custom Validator)
+Instead of showing an error if a user types lowercase, we automatically convert it to uppercase.
+
+Steps:
+Create a new TS file (good practice: inside a validators/ folder).
+
+Import required classes:
+
+code:
+import { AbstractControl, ValidationErrors } from '@angular/forms';
+Create a custom validator function:
+
+code:
+export function convertToUppercase(control: AbstractControl): ValidationErrors | null {
+  const username: string = control.value;
+
+  if (username && username !== username.toUpperCase()) {
+    control.setValue(username.toUpperCase());
+  }
+
+  return null;
+}
+Use it in your form control:
+
+code:
+this.form = this.fb.group({
+  username: ['', [convertToUppercase]]
+});
+Now, whatever user types gets automatically converted to uppercase!
+
+Example 2: Validate a URL (Custom Validator)
+Allow URLs that:
+Start with https
+End with .com, .org, .in, .co, etc.
+
+Steps:
+Create a TS file like url-validator.ts.
+Import required classes:
+
+code:
+import { AbstractControl, ValidationErrors } from '@angular/forms';
+Write your custom function:
+
+code:
+export function urlValidator(control: AbstractControl): ValidationErrors | null {
+  const url: string = control.value;
+  const validExtensions = ['.com', '.org', '.in', '.co'];
+
+  if (!url.startsWith('https')) {
+    return { urlInvalid: true };
+  }
+
+  const hasValidExtension = validExtensions.some(ext => url.includes(ext));
+  if (!hasValidExtension) {
+    return { urlInvalid: true };
+  }
+
+  return null;
+}
+Use it in your FormControl:
+
+code:
+this.form = this.fb.group({
+  website: ['', [Validators.required, urlValidator]]
+});
+In the template, show a message if URL is invalid:
+
+html
+Copy
+Edit
+<div *ngIf="form.get('website')?.errors?.['urlInvalid']">
+  Please enter a valid URL starting with https and ending with a valid extension (.com, .org, etc.).
+</div>
+
+
+Key Points to Remember:
+
+Concept	                Meaning
+AbstractControl	        Represents the form control or form group — helps get/set values, status, etc.
+ValidationErrors	    An object showing validation issues, or null if validation is successful.
+control.setValue()	    Changes the field value programmatically (only possible inside validators cautiously).
+url.startsWith('https')	Checks if URL begins with secure protocol.
+Array.prototype.some()	JavaScript method to check if at least one condition is true in an array.
+
+Custom Validators: Two Types
+
+Type	        When to Use
+Synchronous     Validators (like above)	Immediate field validations
+Asynchronous    Validators (Promise/Observable-based)	Server-side checks (e.g., checking if email already exists)
+
+Real World Usage Examples of Custom Validators:
+Restrict input format (like capitalizing first letter).
+Email uniqueness (server check).
+Password strength checker (must contain at least 1 capital letter, 1 number, 1 special character).
+File upload type checker (allow only .jpg, .png).
+Minimum and maximum date range validator.

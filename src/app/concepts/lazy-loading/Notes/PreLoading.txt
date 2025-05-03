@@ -1,0 +1,69 @@
+Preloading in Angular
+
+What is Preloading?
+Preloading means loading lazily loaded components/modules in the background.
+They are loaded after the app initializes, before the user requests them.
+Execution (displaying the page/component) still happens only when needed.
+Improves navigation speed because the components are ready in memory.
+
+Preloading vs Lazy Loading
+
+Lazy Loading	                                    Preloading
+Load modules only when user navigates	            Load modules in background after app starts
+Might cause a slight delay when user navigates	    No delay when user navigates
+Saves bandwidth if user never visits the route	    Can increase initial background traffic
+
+How to Implement Preloading
+You already have lazy loading using loadComponent.
+Now to preload those components:
+
+Go to app.config.ts.
+
+Find the provideRouter(routes) function.
+
+Add the withPreloading() function.
+
+Example:
+
+import { provideRouter, withPreloading } from '@angular/router';
+import { PreloadAllModules } from '@angular/router';
+
+export const appConfig = {
+  providers: [
+    provideRouter(routes, withPreloading(PreloadAllModules))
+  ]
+};
+
+  This tells Angular:
+→ After the app finishes loading, start preloading all lazy-loaded routes in the background.
+
+Preloading Strategies in Angular
+
+Strategy	            Description
+NoPreloading	        (default) - No preloading, only lazy loading happens
+PreloadAllModules	    Preload all lazy-loaded modules immediately after the app loads
+Custom Preloading	    You can write your own logic to preload based on conditions (user roles, device type, etc.)
+
+Example: Behavior of Preloading
+When preloading is applied:
+Lazy-loaded routes' JS files are downloaded silently.
+Components aren't rendered until user actually navigates.
+When user clicks → instant navigation because it's already in browser memory.
+
+If no preloading:
+JS file is downloaded only when user clicks → small delay in showing the page.
+
+Questions on this: 
+
+Question	                                  Good Answer
+What is preloading in Angular?	              Preloading loads lazily loaded modules in the background after app startup, before user navigates to them.
+What is withPreloading?	                      It is an API to configure preloading strategies along with provideRouter().
+What is PreloadAllModules?	                  A strategy that preloads all lazy-loaded routes immediately after the app loads to speed up navigation.
+What if no preloading strategy is used?	      Angular only loads lazy-loaded modules when the user navigates, possibly causing navigation delays.
+
+Final Important Points
+Preloading does not mean the page is executed/rendered immediately.
+It only downloads the route’s JS file in advance.
+Helps in faster, smoother navigation later.
+Choose preloading smartly depending on app size, network usage, and user behavior patterns.
+

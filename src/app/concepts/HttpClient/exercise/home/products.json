@@ -1,0 +1,19 @@
+{
+  "product": [
+    {
+      "id": "105",
+      "name": "Nokia",
+      "price": 4566
+    },
+    {
+      "id": "106",
+      "name": "Xaomi",
+      "price": 4556
+    },
+    {
+      "id": "107",
+      "name": "Realme",
+      "price": 456
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+What is FormControl in Angular?
+Answer:
+FormControl is a class in Angular’s Reactive Forms module that represents a single form input element like <input>, <select>, etc. It helps in tracking the value, validation status, and state of the form element it is attached to.
+
+1. How do you bind a FormControl to an input element?
+Answer:
+Create an instance in the component:
+code: 
+myControl = new FormControl('');
+
+Bind it in the template:
+<input [formControl]="myControl" />
+
+2. How to retrieve the value of the field?
+Answer:
+code: 
+console.log(this.myControl.value);
+
+3. How to check validation status?
+Answer:
+code: 
+console.log(this.myControl.valid);  // true or false
+console.log(this.myControl.errors); // shows which validators failed

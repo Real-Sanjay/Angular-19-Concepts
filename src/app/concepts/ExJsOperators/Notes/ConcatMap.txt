@@ -1,0 +1,55 @@
+RxJS concatMap Operator
+What is it?
+The concatMap operator:
+Maps each value from a source observable to an inner observable
+Subscribes to one inner observable at a time
+Waits for it to complete before moving to the next
+Ensures that values are emitted in order
+
+Example
+import { of } from 'rxjs';
+import { concatMap, delay } from 'rxjs/operators';
+
+const source$ = of(1, 2, 3);
+
+const inner = (val: number) => of('A', 'B', 'C').pipe(delay(500));
+
+source$
+  .pipe(
+    concatMap(val => {
+      console.log(`Source emitted: ${val}`);
+      return inner(val);
+    })
+  )
+  .subscribe(result => console.log(`Inner emitted: ${result}`));
+ Output:
+Source emitted: 1
+Inner emitted: A
+Inner emitted: B
+Inner emitted: C
+Source emitted: 2
+Inner emitted: A
+Inner emitted: B
+Inner emitted: C
+
+When to Use concatMap
+When order matters
+For sequential API calls
+For uploading files one by one
+For step-by-step workflows where each step depends on the completion of the previous one
+
+mergeMap vs concatMap
+
+Feature	                mergeMap	            concatMap
+Execution Order	        Parallel	            Sequential
+Order of Output	        Not guaranteed	        Maintained
+Inner Observable	    All run concurrently	Waits for one to finish before the next
+Use case	Bulk calls, independent operations	Ordered calls, dependent operations
+ 
+
+ 
+Q1: What is the concatMap operator used for?
+A: concatMap is used to flatten observables in a sequential order. It maps each emitted value from the source observable to an inner observable and waits for it to complete before processing the next, ensuring that the order of emissions is preserved.
+
+Q2: Difference between mergeMap and concatMap?
+A: Both are used to flatten higher-order observables. However, mergeMap subscribes to all inner observables in parallel, which may result in out-of-order emissions. concatMap subscribes to each inner observable sequentially, preserving the order of emitted values.

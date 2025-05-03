@@ -1,0 +1,13 @@
+ What is a Decorator in Angular?
+In Angular, decorators are special functions prefixed with @ that add metadata to classes, methods, properties, or parameters. They help Angular understand how to process and instantiate various elements in your app.
+
+📘 Class Decorators
+Class decorators are applied to a class definition and are used to define what type of class it is — for example:
+
+
+Decorator	Purpose
+@Component	Tells Angular it's a component
+@Directive	Tells Angular it's a directive
+@Injectable	Tells Angular it's a service that can be injected
+@Pipe	    Tells Angular it's a custom pipe
+@NgModule	Tells Angular it's a module (container of components, directives, services, etc.)

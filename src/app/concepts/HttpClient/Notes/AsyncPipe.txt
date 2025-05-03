@@ -1,0 +1,79 @@
+HTTP GET Request with Observable + Async Pipe in Angular
+
+What’s New in This Approach?
+No need for manual .subscribe() in the component.
+async pipe handles both subscription and unsubscription.
+Cleaner code and fewer memory leaks.
+Can easily be extended with operators like map, catchError, etc.
+
+Step-by-Step Refactor from Subscription to Observable Binding
+1️⃣ Component Code
+
+import { Component } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+@Component({
+  selector: 'app-user',
+  standalone: true,
+  templateUrl: './user.component.html'
+})
+export class UserComponent {
+  responseData$!: Observable<any>;
+  loadData: boolean = false;
+
+  constructor(private http: HttpClient) {}
+
+  getData() {
+    this.responseData$ = this.http.get('https://jsonplaceholder.typicode.com/users');
+    this.loadData = true;
+  }
+}
+
+Notes:
+responseData$ is suffixed with $ to indicate it's an Observable.
+No manual .subscribe() — the async pipe in the template will handle it.
+
+2️⃣ Template Code with async Pipe and Table Format
+
+<button (click)="getData()">Get Data</button>
+
+<ng-container *ngIf="loadData">
+  <table *ngIf="responseData$ | async as users">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Address</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users">
+        <td>{{ user.name }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.phone }}</td>
+        <td>{{ user.address.street }}, {{ user.address.city }}</td>
+      </tr>
+    </tbody>
+  </table>
+</ng-container>
+
+Why This Approach Is Better?
+
+Feature	                Traditional .subscribe()	    With async Pipe
+Subscription handling	Manual	                        Automatic
+Unsubscribing	        Must do manually (risk of leak)	Auto-handled by Angular
+Syntax	                More code	                    Cleaner and declarative
+Template binding	    Requires storing data manually	Reactive and direct in template
+
+
+Summary
+You converted a manually subscribed HTTP GET request into an Observable-based flow.
+Leveraged the async pipe to simplify subscription and template rendering.
+Displayed structured, specific data (name, email, etc.) in a clean table format.
+This approach aligns with best practices in modern Angular development.
+Would you like to continue this flow by adding:
+error handling with catchError?
+loading indicators (*ngIf="!(loading)")?
+or converting it into a reusable service method?

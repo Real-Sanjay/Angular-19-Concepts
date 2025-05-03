@@ -1,0 +1,77 @@
+ Async Pipe in Angular
+What is the Async Pipe?
+The Async Pipe in Angular allows you to subscribe to an Observable or a Promise directly inside the template.
+
+It automatically handles:
+Subscribing when the component loads.
+Updating the view when new values arrive.
+Unsubscribing automatically when the component is destroyed (to prevent memory leaks).
+This avoids manual subscribe()/unsubscribe() code, making the application simpler and cleaner.
+
+Why Use the Async Pipe?
+Removes manual subscription code.
+Avoids memory leaks (auto unsubscribe).
+Improves code readability and maintainability.
+Simplifies displaying real-time or asynchronous data in templates.
+
+Example: Basic Usage
+Component Code:
+
+import { Observable, of } from 'rxjs';
+import { delay } from 'rxjs/operators';
+
+export class DemoComponent {
+  value$: Observable<string>;
+
+  constructor() {
+    this.value$ = of('Observable emitted value').pipe(delay(2000));
+  }
+}
+Template Code:
+<p>{{ value$ | async }}</p>
+
+value$ is an observable (note the $ suffix as a naming convention).
+
+async pipe subscribes automatically and displays the emitted value after 2 seconds.
+
+No need to write .subscribe() or .unsubscribe() manually.
+
+Important Behavior
+For an Observable, the async pipe:
+Subscribes to the stream.
+Renders every emitted value.
+For a Promise, the async pipe:
+Waits for it to resolve.
+Renders the resolved value only once.
+
+More Examples
+1. Iterating Observable Arrays:
+
+If you have an observable emitting an array:
+
+numbers$: Observable<number[]> = of([1, 2, 3, 4, 5]);
+In the template:
+<ul>
+  <li *ngFor="let number of numbers$ | async">{{ number }}</li>
+</ul>
+You can directly loop over an observable array!
+
+2. Working with Promises:
+
+promiseMessage = new Promise((resolve) => {
+  setTimeout(() => resolve('Promise Resolved!'), 2000);
+});
+In the template:
+
+<p>{{ promiseMessage | async }}</p>
+When the promise resolves after 2 seconds, the message appears!
+
+Questions and Answers:
+
+1. What is the Async Pipe?	An Angular pipe that subscribes to Observables and Promises directly in the template and manages unsubscription automatically.
+2. How does it work with Observables?	Subscribes to the observable, listens for emissions, updates the view with new values, and unsubscribes when the component is destroyed.
+3. How does it work with Promises?	Waits for the promise to resolve and displays the final resolved value in the template.
+
+Observable + Async Pipe → Listens to multiple emissions (real-time values).
+Promise + Async Pipe → Listens once to the final resolved value.
+No manual subscription or memory leak worries anymore!

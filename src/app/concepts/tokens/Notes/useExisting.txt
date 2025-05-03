@@ -1,0 +1,77 @@
+What is useExisting in Angular?
+useExisting is used to create an alias for an existing provider.
+It means that two different tokens will refer to the same instance of a service. No new instance is created. You're just telling Angular: "Hey, use that existing one!"
+
+Practical Example: Alert Services
+You have:
+AlertMessageOneService
+AlertMessageTwoService
+Now, you want both tokens to refer to the same instance of AlertMessageOneService.
+
+alert-message-one.service.ts
+code:
+import { Injectable } from '@angular/core';
+
+@Injectable()
+export class AlertMessageOneService {
+  showAlert() {
+    alert('This is alert from Message ONE!');
+  }
+}
+alert-message-two.service.ts
+code:
+import { Injectable } from '@angular/core';
+
+@Injectable()
+export class AlertMessageTwoService {
+  showAlert() {
+    alert('This is alert from Message TWO!');
+  }
+}
+🔧 In app.component.ts (or app.module.ts)
+code:
+import { Component } from '@angular/core';
+import { AlertMessageOneService } from './alert-message-one.service';
+import { AlertMessageTwoService } from './alert-message-two.service';
+
+@Component({
+  selector: 'app-root',
+  template: `<button (click)="show()">Show Alert</button>`,
+  providers: [
+    AlertMessageOneService,
+    {
+      provide: AlertMessageTwoService,
+      useExisting: AlertMessageOneService
+    }
+  ]
+})
+export class AppComponent {
+  constructor(private alertService: AlertMessageTwoService) {}
+
+  show() {
+    this.alertService.showAlert();
+  }
+}
+
+ What Happens Here:
+You only create one instance of AlertMessageOneService.
+AlertMessageTwoService becomes an alias — just another name for the same object.
+When this.alertService.showAlert() is called, it runs the code from AlertMessageOneService.
+No new memory used. No duplicate logic.
+
+Why use useExisting?
+Use Case	                                                 Reason
+Reuse one service under multiple names	                     Share functionality across modules or libraries
+Avoid memory waste	                                         Only one instance is created
+Use same implementation with different interface contracts	 Handy for abstraction or testing scenarios
+Great in libraries/plugins	Map standard tokens to your internal service without rewriting logic
+
+
+
+ Conceptual Summary:
+code:
+// Instead of creating a new object
+provide: AlertMessageTwoService, useClass: AlertMessageTwoService
+
+// Reuse an existing instance (like a nickname)
+provide: AlertMessageTwoService, useExisting: AlertMessageOneService

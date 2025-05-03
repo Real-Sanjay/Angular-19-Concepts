@@ -1,0 +1,86 @@
+Angular Pipes Recap: Transforming Template Data
+Pipes in Angular transform data before it gets displayed in the template. A custom pipe typically takes:
+Input → value
+Processing logic
+Output → Transformed result
+
+Types of Pipes in Angular
+
+Pipe Type	Description
+Pure	    Executes only when input value changes. Optimized for performance.
+Impure	    Executes on every change detection cycle, even if input hasn't changed.
+By default, all pipes are pure unless specified otherwise.
+
+Pure Pipe Example: IncrementCountPipe
+1. Create Pipe:
+code:
+ng g p incrementCount
+
+2. Pipe Implementation (increment-count.pipe.ts):
+code:
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+  name: 'incrementCount'
+})
+export class IncrementCountPipe implements PipeTransform {
+  transform(value: number): number {
+    console.log('Counter value updated:', value);
+    return value;
+  }
+}
+3. Component Setup (counter.component.ts):
+code:
+export class CounterComponent {
+  counterValue = 0;
+
+  incrementCounter() {
+    this.counterValue++;
+  }
+}
+4. Template (counter.component.html):
+<div style="text-align: center;">
+  <button (click)="incrementCounter()">Increment</button>
+  <p>{{ counterValue | incrementCount }}</p>
+</div>
+
+Result with Pure Pipe (default):
+console.log() is triggered only when counterValue changes.
+
+Output updates only when needed.
+
+Impure Pipe Example
+To make a pipe impure, set pure: false in the @Pipe decorator:
+
+code:
+@Pipe({
+  name: 'incrementCount',
+  pure: false
+})
+
+Result with Impure Pipe:
+Pipe is triggered on every change detection cycle.
+Even when counterValue doesn’t change, the transform() function is called.
+Console logs are shown twice per click:
+One for view update
+One to re-check if the value has changed
+
+💡 Pure vs Impure Pipe Comparison
+Feature         	             Pure Pipe	                 Impure Pipe
+Executes on change detection     Only if value changes	     On every cycle
+Performance	                     Optimized	                 Can be expensive
+Default behavior	             Yes	                     Must be explicitly set
+Use case examples	             Formatting date, number,..	 Filtering, dynamic content updates
+
+When to Use Impure Pipes
+Impure pipes are useful when:
+The data is mutable and may change internally, without changing the reference
+You need real-time updates even without input changes (like filtering live data)
+
+
+Summary
+Concept	Key Point
+transform()	Core logic of the pipe
+Pure pipe	Called only when input changes (default)
+Impure pipe	Called on every change detection cycle
+@Pipe({ pure })	Set to false to make a pipe impure

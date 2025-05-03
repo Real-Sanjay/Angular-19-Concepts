@@ -1,0 +1,30 @@
+What is CanActivate?
+Purpose: Controls whether a route can be activated (entered).
+Use case: Protects secure pages like /admin, /profile, etc.
+Returns:
+true → allow access
+false → block access
+
+Typical scenario: Checking if a user is logged in before entering a protected route.
+
+What is CanDeactivate?
+Purpose: Controls whether a route can be deactivated (left).
+Use case: Warns users about unsaved changes when they try to leave a page (like a form).
+
+Returns:
+true → allow leaving the page
+false → prevent leaving
+Or shows a confirmation popup to ask the user.
+
+Typical scenario: Asking "Are you sure you want to leave without saving?"
+
+Summary of Differences:
+Feature	            CanActivate	                    CanDeactivate
+When triggered?	    Before entering a route	        Before leaving a route
+Typical usage	    Authentication/Authorization	Unsaved form warning
+Focus	            Route access protection	        Route exit protection
+
+Quick Real-world Example:
+Scenari Guard Used
+Prevent unauthorized users from entering /admin	CanActivate
+Warn user about unsaved data before leaving a form	CanDeactivate

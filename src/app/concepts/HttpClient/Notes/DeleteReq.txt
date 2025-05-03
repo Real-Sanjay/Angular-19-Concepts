@@ -1,0 +1,48 @@
+HTTP DELETE Request in Angular
+What is the DELETE Method?
+The DELETE request is used to remove resources from the server.
+It usually includes a resource identifier (e.g., user ID) in the URL to specify which record to delete.
+The server responds with a status message indicating success or failure.
+
+Static DELETE Request Example
+
+deleteData() {
+  this.http.delete('http://localhost:3000/users/104').subscribe(
+    response => {
+      console.log('User deleted:', response);
+    },
+    error => {
+      console.error('Delete failed:', error);
+    }
+  );
+}
+
+Dynamic DELETE Request with Input Field
+Use Case:
+Allow users to enter an ID in an input field, and delete the corresponding user.
+
+Component Code (TypeScript)
+userId: string = '';
+
+deleteData() {
+  if (!this.userId.trim()) {
+    alert('Please enter a user ID to delete.');
+    return;
+  }
+
+  this.http.delete(`http://localhost:3000/users/${this.userId}`).subscribe(
+    response => {
+      console.log(`User with ID ${this.userId} deleted.`, response);
+    },
+    error => {
+      console.error('Delete failed:', error);
+    }
+  );
+}
+
+Template Code (HTML)
+<input [(ngModel)]="userId" placeholder="Enter User ID to delete" />
+<button (click)="deleteData()">Delete User</button>
+
+
+

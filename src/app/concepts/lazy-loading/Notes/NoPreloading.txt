@@ -1,0 +1,47 @@
+NoPreloading Strategy in Angular
+What is NoPreloading?
+NoPreloading means no background preloading of lazy-loaded modules.
+Modules/components are loaded only when the user navigates to their route.
+No preloading HTTP calls happen during app initialization.
+
+Example
+Suppose you have two lazily loaded routes:
+const routes = [
+  { path: 'first', loadComponent: () => import('./first.component').then(m => m.FirstComponent) },
+  { path: 'second', loadComponent: () => import('./second.component').then(m => m.SecondComponent) }
+];
+
+In app.config.ts, to disable preloading:
+
+import { provideRouter, withPreloading } from '@angular/router';
+import { NoPreloading } from '@angular/router';
+
+export const appConfig = {
+  providers: [
+    provideRouter(routes, withPreloading(NoPreloading))
+  ]
+};
+
+Now:
+Only the first component loads if that's the initial route.
+The second component does NOT load until the user navigates to /second.
+
+Behavior Comparison
+
+Preloading Strategy	            Behavior
+PreloadAllModules	            Preloads all lazy routes after app starts
+NoPreloading	                Loads modules only when user navigates
+
+Important Points about NoPreloading
+Reduces initial data transfer: Since only necessary resources are loaded initially.
+Does not necessarily make the app faster: Navigation might feel slower when the user visits lazy routes for the first time.
+Best for: Apps with large modules that aren't needed immediately.
+Not ideal for: Modules/routes that users visit frequently — because it causes a small navigation delay.
+
+FAQs 
+
+
+What is the default preloading strategy in Angular?	The default is NoPreloading. Angular only loads lazy-loaded modules when their route is accessed.
+When should you use NoPreloading?	When you have large lazy modules that would negatively impact the app's startup time if preloaded.
+Does NoPreloading always improve speed?	No. It reduces initial load size, but first navigation to lazy routes may feel slower.
+Should I preload everything?	No. Preload only routes that are frequently visited or critical for user experience.

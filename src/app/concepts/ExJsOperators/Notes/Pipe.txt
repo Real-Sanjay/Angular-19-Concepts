@@ -1,0 +1,67 @@
+RxJS Pipeable Operators
+What Are Pipeable Operators?
+Pipeable operators are functions used with the .pipe() method to operate on observables.
+They transform, filter, or combine data emitted by observables without mutating the original observable.
+The .pipe() method is used to chain multiple operators.
+
+Syntax Example
+
+import { of } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+const source$ = of(1, 2, 3);
+
+const result$ = source$.pipe(
+  map(value => value * 2)
+);
+
+result$.subscribe(val => console.log(val));
+Output:
+2
+4
+6
+
+Another Example with Strings
+
+import { of } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+const cities$ = of('mumbai', 'delhi', 'bangalore');
+
+cities$.pipe(
+  map(city => city.toUpperCase())
+).subscribe(val => console.log(val));
+
+Output:
+MUMBAI
+DELHI
+BANGALORE
+
+ Why Use the pipe() Function?
+✅ Enables operator chaining in a clean, readable, and maintainable way.
+
+✅ Encourages separation of concerns: each operator does one job.
+
+✅ Keeps the original observable intact (pure and functional style).
+
+✅ Supports reusability by composing operators together.
+
+What is Operator Chaining with pipe()?
+Operator chaining refers to passing multiple operators inside a .pipe() function.
+Each operator processes the output of the previous operator.
+
+Analogy: Similar to chaining .then() in JavaScript promises or function composition.
+
+source$.pipe(
+  operator1(),
+  operator2(),
+  operator3()
+);
+
+Multiple Questions, One Answer
+Q1: What is the use of pipe() in RxJS?
+Q2: What is the advantage of pipeable operators?
+Q3: Explain operator chaining using pipe.
+🟩 Single Unified Answer:
+The pipe() function in RxJS allows chaining multiple operators in a clean and sequential way. It improves code readability, maintainability, and reusability by separating logic into modular steps that transform or handle data from the observable.
+

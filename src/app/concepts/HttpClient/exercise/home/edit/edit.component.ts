@@ -1,0 +1,47 @@
+import { Component, OnInit } from '@angular/core';
+import { Product } from '../../product';
+import { ProductService } from '../../product.service';
+import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+
+@Component({
+  selector: 'app-edit',
+  standalone: true,
+  imports: [FormsModule],
+  templateUrl: './edit.component.html',
+  styleUrl: './edit.component.css'
+})
+export class EditComponent implements OnInit {
+  newProductForm: Product = {
+    id: '',
+    name: '',
+    price: 0,
+  };
+  ngOnInit(): void {
+    this.route.paramMap.subscribe((param) => {
+      const id = Number(param.get('id'));
+      this.getProductsById(id);
+    });
+  }
+  constructor(
+    private productService: ProductService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {}
+
+  getProductsById(id: number) {
+    this.productService.getProductsById(id).subscribe((data) => {
+      this.newProductForm = data;
+    });
+  }
+
+  updateProduct() {
+    this.productService.updateProduct(this.newProductForm).subscribe({
+      next: () => {
+        this.router.navigate(['/products']);
+      },
+      error: (e) => console.error(e),
+    });
+  }
+
+}

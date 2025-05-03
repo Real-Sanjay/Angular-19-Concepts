@@ -1,0 +1,93 @@
+What is FormGroup in Angular?
+A FormGroup is a class provided by Angular’s Reactive Forms module. It acts as a wrapper around a collection of FormControls, allowing you to manage and validate multiple input fields as a single group. It's particularly useful for complex or large forms.
+
+Working Example: Angular Reactive Form with FormGroup
+
+Component TypeScript File - app.component.ts
+
+import { Component } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+
+@Component({
+  selector: 'app-form-group',
+  standalone: true,
+  imports: [ReactiveFormsModule],
+  templateUrl: './form-group.component.html',
+  styleUrl: './form-group.component.css'
+})
+export class AppComponent {
+  myForm: FormGroup;
+
+  constructor() {
+    this.myForm = new FormGroup({
+      name: new FormControl('', Validators.required),
+      email: new FormControl('', [Validators.required, Validators.email]),
+      age: new FormControl('', Validators.min(18)),
+    });
+  }
+
+  onSubmit() {
+    const age = this.myForm.get('age')?.value;
+
+    if (age < 18) {
+      alert('You must be at least 18 years old to continue.');
+      return;
+    }
+
+    if (this.myForm.valid) {
+      console.log('Form Submitted!', this.myForm.value);
+    } else {
+      console.log('Form is invalid!', this.myForm.errors);
+    }
+  }
+}
+
+Component HTML Template - app.component.html
+
+<form [formGroup]="myForm" (ngSubmit)="onSubmit()" class="form-box">
+  <div>
+    <label>Name:</label>
+    <input type="text" formControlName="name" />
+    <div *ngIf="myForm.get('name')?.touched && myForm.get('name')?.invalid">
+      Name is required.
+    </div>
+  </div>
+
+  <div>
+    <label>Email:</label>
+    <input type="email" formControlName="email" />
+    <div *ngIf="myForm.get('email')?.touched && myForm.get('email')?.invalid">
+      <div *ngIf="myForm.get('email')?.errors?.['required']">Email is required.</div>
+      <div *ngIf="myForm.get('email')?.errors?.['email']">Enter a valid email address.</div>
+    </div>
+  </div>
+
+  <div>
+    <label>Age:</label>
+    <input type="number" formControlName="age" />
+    <div *ngIf="myForm.get('age')?.touched && myForm.get('age')?.invalid">
+      <div *ngIf="myForm.get('age')?.errors?.['min']">Minimum age is 18.</div>
+    </div>
+  </div>
+
+  <button type="submit">Submit</button>
+</form>
+
+
+ Questions Recap
+❓ What is FormGroup in Angular?
+A FormGroup is a collection of FormControls that track the state and validity of a group of related form inputs.
+
+❓ What is the purpose of FormControl within a FormGroup?
+A FormControl represents an individual input field that maintains its own value, validation, and status. When used inside a FormGroup, it allows individual tracking and validation while contributing to the overall group.
+
+❓ How do you associate FormControls with a FormGroup in the template?
+By using the formControlName directive. Example:
+<input formControlName="email" />
+This directive connects the control to the respective FormControl declared inside the FormGroup.
+
+❓ How to check the validity of the entire form?
+Use the .valid property of the FormGroup instance:
+if (this.myForm.valid) {
+  // form is valid
+}

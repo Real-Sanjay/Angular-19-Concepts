@@ -1,0 +1,110 @@
+Validators
+touched property
+Error messages
+Linking controls properly to avoid TypeScript issues
+
+Purpose of the touched Property
+The touched property is a boolean flag that becomes true when:
+A user focuses on an input (<input>), and
+Then moves away (blur) without necessarily changing the value
+It helps control when to show validation messages, so users aren’t overwhelmed with errors when the form first loads.
+
+Full Example with Validation
+TypeScript (app.component.ts)
+
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html'
+})
+export class AppComponent {
+  myForm: FormGroup;
+
+  // Define separate FormControl instances to avoid TypeScript errors
+  nameControl: FormControl;
+  emailControl: FormControl;
+
+  constructor(private fb: FormBuilder) {
+    // Create controls with validators
+    this.nameControl = new FormControl('', Validators.required);
+    this.emailControl = new FormControl('', [Validators.required, Validators.email]);
+
+    // Create form and assign controls
+    this.myForm = this.fb.group({
+      name: this.nameControl,
+      email: this.emailControl
+    });
+  }
+
+  onSubmit() {
+    if (this.myForm.valid) {
+      console.log('Form Submitted:', this.myForm.value);
+    }
+  }
+}
+
+Template (app.component.html)
+<form [formGroup]="myForm" (ngSubmit)="onSubmit()" novalidate>
+  <div class="mb-3">
+    <label>Name:</label>
+    <input type="text" class="form-control" formControlName="name">
+    <span class="text-danger" *ngIf="nameControl.touched && nameControl.errors?.['required']">
+      Name is required.
+    </span>
+  </div>
+
+  <div class="mb-3">
+    <label>Email:</label>
+    <input type="email" class="form-control" formControlName="email">
+    <span class="text-danger" *ngIf="emailControl.touched && emailControl.errors?.['required']">
+      Email is required.
+    </span>
+    <span class="text-danger" *ngIf="emailControl.touched && emailControl.errors?.['email']">
+      Invalid email format.
+    </span>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+Why This Works
+formControlName="name" must match the control name in FormGroup
+nameControl.touched makes sure validation only shows after user interaction
+nameControl.errors?.['required'] checks for the specific validation error
+Having separate variables like nameControl avoids template errors in strict TypeScript mode
+Validators.required, Validators.email are built-in Angular validators
+
+
+
+Instead of using separate variables like nameControl, you can directly access the controls from the form group in the template using get():
+
+<input formControlName="name" />
+<span class="text-danger"
+      *ngIf="myForm.get('name')?.touched && myForm.get('name')?.errors?.['required']">
+  Name is required.
+</span>
+This way, you don’t need to define nameControl in the TS file.
+ So, When Should You Use nameControl: FormControl?
+Use it when:
+You want cleaner template syntax, like nameControl.touched instead of myForm.get('name')?.touched
+You want direct access in the TS file (e.g., this.nameControl.markAsTouched())
+You can skip it when:
+You're fine with calling this.myForm.get('name') or form.get('email') everywhere
+
+You want to reduce extra declarations in your class
+
+Approach	                                              Pros	                               Cons
+✅ Separate nameControl          variable	Clean syntax in template, better for strict TS	  Slightly more boilerplate
+❌ No variable, use get()	      No extra declarations	                                      More verbose template syntax
+
+
+
+Summary
+Term	                Meaning
+Validators.required	    Ensures input is not empty
+Validators.email	    Ensures a valid email pattern
+touched	                Returns true if the input was focused and then blurred
+errors	                Contains all validation error types on a control
+formControlName	        Binds an input to a control in FormGroup

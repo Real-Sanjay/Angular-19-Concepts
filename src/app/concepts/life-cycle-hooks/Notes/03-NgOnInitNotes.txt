@@ -1,0 +1,73 @@
+What is ngOnInit?
+A lifecycle hook called once after the component's data-bound properties are initialized.
+Defined by implementing the OnInit interface from @angular/core.
+Used for component initialization logic like setting up data, subscribing to services, or API calls.
+
+code:
+import { Component, OnInit } from '@angular/core';
+
+@Component({...})
+export class MyComponent implements OnInit {
+  ngOnInit(): void {
+    console.log("ngOnInit - Component Initialized");
+  }
+}
+🛠 Constructor vs ngOnInit
+Feature	           Constructor	                                ngOnInit
+Called	            When the component class is instantiated	After Angular has fully initialized the component
+Input Binding	    Not available	                            Available
+Best for	        Simple initialization (e.g., DI)	        Component setup, fetching data, input-related logic
+
+
+Example: Counter
+code:
+count = 0;
+counterInterval: any;
+
+startCounter() {
+  this.counterInterval = setInterval(() => {
+    if (this.count <= 5) {
+      this.count++;
+    } else {
+      clearInterval(this.counterInterval);
+    }
+  }, 1000);
+}
+
+ngOnInit(): void {
+  this.startCounter(); // Start counting after component is fully initialized
+}
+
+
+❓ Interview Questions Breakdown
+1.Difference between constructor and ngOnInit?
+Constructor runs first but doesn’t have access to input-bound values.
+ngOnInit is lifecycle-aware and has access to bound inputs and services.
+
+2.Can you fetch API data inside ngOnInit?
+Yes. It’s the recommended place for that because Angular ensures that all dependencies and bindings are ready.
+
+3.Is ngOnInit called multiple times?
+No. It's only called once per component instance lifecycle.
+
+4.What happens if you access @Input values in the constructor?
+They will be undefined, since Angular hasn’t assigned them yet.
+
+Child Component Example (Input Binding Timing)
+Parent Component (App Component)
+<app-child [inputValue]="parentValue"></app-child>
+
+Child Component
+code:
+export class ChildComponent implements OnInit {
+  @Input() inputValue?: string;
+
+  constructor() {
+    console.log("Constructor:", this.inputValue); // undefined
+  }
+
+  ngOnInit(): void {
+    console.log("ngOnInit:", this.inputValue); // 'Hello from App Component'
+  }
+}
+✅ This shows that @Input() values are not available in the constructor, but are available in ngOnInit.

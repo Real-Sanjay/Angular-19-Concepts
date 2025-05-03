@@ -1,0 +1,67 @@
+@Output() and EventEmitter
+Purpose:
+Used to send data from a child component to a parent component by emitting custom events.
+
+While @Input() is for parent → child communication,
+@Output() is for child → parent communication.
+
+🛠️ Syntax Breakdown
+1. Child Component (Emits the event)
+code:
+import { Component, Output, EventEmitter } from '@angular/core';
+
+@Component({
+  selector: 'app-child',
+  template: `<button (click)="emitEvent()">Click Me</button>`
+})
+export class ChildComponent {
+  @Output() myEvent: EventEmitter<string> = new EventEmitter<string>();
+
+  emitEvent() {
+    this.myEvent.emit('Event emitted from child component');
+  }
+}
+
+2. Parent Component (Receives the event)
+In the .ts file:
+code:
+export class AppComponent {
+  message: string = '';
+
+  receiveChildEvent(event: string) {
+    this.message = event;
+  }
+}
+
+In the .html file:
+
+<app-child (myEvent)="receiveChildEvent($event)"></app-child>
+<p>{{ message }}</p>
+💡 Flow Summary
+
+ChildComponent:
+  - Has an Output property of type EventEmitter
+  - Emits a message via .emit()
+
+AppComponent:
+  - Listens to the event using (myEvent)="handler($event)"
+  - Receives the data and stores it in a variable (message)
+
+Interview-Friendly Answer
+Q: How do you pass data from a child component to a parent component in Angular?
+
+A:
+We use the @Output() decorator along with Angular’s EventEmitter class. The @Output() marks a property in the child component that emits custom events. When the child emits an event using .emit(), the parent component listens for that event using event binding syntax like (eventName)="handler($event)". The parent can then handle the data passed from the child.
+
+ Quick Facts
+Feature	        Description
+@Output()	    Marks a child component property as event-emitting
+EventEmitter	Emits custom data (string, object, number, etc.)
+Syntax	        (customEvent)="handler($event)"
+Direction	    Child → Parent
+
+🔁 Real-World Usage Examples
+Notify parent when a form is submitted from a child.
+Send selected item from a dropdown in a reusable child component.
+Trigger an update or refresh in parent when something changes in the child.
+

@@ -1,0 +1,36 @@
+What is CanActivateChild?
+Purpose: Controls whether child routes of a parent route can be activated.
+Use case: Protects nested routes inside a parent route.
+
+Returns:
+true → allow access to the child route
+false → block access (or redirect elsewhere)
+
+Example:
+
+Scenario	                                
+Before clicking the "Enable Routes" button	Access to child routes is blocked
+After clicking the button	Access to child routes is granted
+
+we achive this by:
+Creating a service to manage the button state (ButtonService).
+Creating a CanActivateChild guard to check that button state before allowing child route access.
+Navigating back to the parent route if the condition is not satisfied.
+
+Note:
+If both CanActivate and CanActivateChild are used in a routing setup,
+CanActivateChild always executes first (for the child routes).
+
+Quick Sketch of How the Guard Logic Works:
+
+canActivateChild(
+  childRoute: ActivatedRouteSnapshot,
+  state: RouterStateSnapshot
+): boolean {
+  if (this.buttonService.isButtonClicked()) {
+    return true; // allow access
+  } else {
+    this.router.navigate(['/parent']); // redirect to parent
+    return false; // block access
+  }
+}

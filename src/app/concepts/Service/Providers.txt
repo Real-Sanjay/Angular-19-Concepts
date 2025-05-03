@@ -1,0 +1,114 @@
+What are Providers in Angular?
+Providers tell Angular how to create and deliver dependencies (like services). Angular uses them to register services with the injector.
+Without a provider, Angular doesn’t know how to create a service.
+
+Three Ways to Provide a Service in Angular
+1. At the Service Level (@Injectable) — Global Singleton
+code:
+@Injectable({ providedIn: 'root' })
+export class MyService { }
+Default when you generate a service using ng generate service.
+Angular provides a single shared instance throughout the application.
+Ideal for shared services like HttpService, AuthService, etc.
+
+🟢 Scope: Global (Singleton)
+🟢 Lifecycle: As long as the app runs.
+
+2. At the Module Level (@NgModule)
+code:
+@NgModule({
+  providers: [MyService]
+})
+export class AppModule { }
+The service will be available only to components declared in this module.
+Less common now since providedIn: 'root' handles most use cases.
+
+🟡 Scope: Limited to the module
+🟡 Lifecycle: As long as the module is active.
+
+3. At the Component Level (@Component) — Multiple Instances
+code:
+@Component({
+  selector: 'app-my-component',
+  providers: [MyService]
+})
+export class MyComponent { }
+A new instance of the service is created for each instance of the component.
+
+Useful for encapsulated state or behavior (e.g., temporary form data, per-user session).
+
+🔴 Scope: Limited to the component and its children
+🔴 Lifecycle: Tied to the component instance.
+
+ Example
+➤ PowerService
+code:
+export class PowerService {
+  calculatePower(value: number, power: number): number {
+    return Math.pow(value, power);
+  }
+}
+➤ CubeService
+code:
+@Injectable()
+export class CubeService {
+  constructor(private powerService: PowerService) {}
+
+  calculateCube(value: number): number {
+    return this.powerService.calculatePower(value, 3);
+  }
+}
+Note: PowerService doesn’t have @Injectable, so it can’t be injected unless instantiated manually like in CubeService.
+
+➤ MyComponent
+code:
+@Component({
+  selector: 'app-my',
+  templateUrl: './my.component.html',
+  providers: [CubeService, PowerService]
+})
+export class MyComponent {
+  constructor(private cubeService: CubeService) {}
+
+  result = this.cubeService.calculateCube(4); // 64
+}
+Each MyComponent gets its own CubeService and PowerService.
+
+If you had multiple instances of MyComponent, they wouldn’t share the same service instances.
+
+Concept Questions and Answers
+Q1: What is the role of providers in Angular?
+Answer:
+Providers tell Angular how to create instances of services for dependency injection. Without them, Angular cannot inject the required services.
+
+Q2: How do you define providers at different levels?
+Answer:
+
+Component level:
+
+code:
+@Component({ providers: [MyService] })
+Module level:
+
+code:
+@NgModule({ providers: [MyService] })
+Service level:
+
+code:
+@Injectable({ providedIn: 'root' })
+Q3: Can you provide multiple instances of the same service in different components?
+Answer:
+Yes. By providing the service at the component level, Angular will create a new instance of the service for each component instance. This way, changes in one component’s service instance do not affect others.
+
+code:
+@Component({ providers: [MyService] })
+Q4: Can a service be injected into another service?
+Answer:
+Yes. One service can inject another using constructor injection, like:
+
+code:
+@Injectable()
+export class ServiceB {
+  constructor(private serviceA: ServiceA) {}
+}
+Just make sure ServiceA has @Injectable() defined.

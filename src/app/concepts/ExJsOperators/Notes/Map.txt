@@ -1,0 +1,57 @@
+RxJS map Operator
+What Is It?
+The map operator in RxJS is used to transform each value emitted by an observable using a provided function.
+It is pure and returns a new observable without modifying the original one.
+
+Similar to: JavaScript's Array.prototype.map() – but for observables.
+
+Basic Syntax
+
+import { of } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+const numbers$ = of(1, 2, 3, 4);
+
+const doubled$ = numbers$.pipe(
+  map(n => n * 2)
+);
+
+doubled$.subscribe(val => console.log(val));
+Output:
+2
+4
+6
+8
+The transformation function (called the project function) gets each emitted value (n) and returns the transformed one.
+
+Example 2: Mouse Coordinates
+Scenario:
+Track mouse movement and extract x and y coordinates.
+
+import { fromEvent } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+cursorPosition$ = fromEvent<MouseEvent>(window, 'mousemove').pipe(
+  map(event => ({
+    x: event.clientX,
+    y: event.clientY
+  }))
+);
+Angular Template Binding:
+
+<p>Cursor X: {{ cursorPosition$ | async?.x }}</p>
+<p>Cursor Y: {{ cursorPosition$ | async?.y }}</p>
+The async pipe subscribes to the observable and auto-unsubscribes.
+
+ The ?. (optional chaining) avoids errors when the observable value is still undefined.
+
+ Why Use map?
+To transform raw data (e.g., numbers, event objects, responses).
+
+To format values for UI or further processing.
+
+To simplify logic inside pipelines.
+
+Question
+How does the map operator work in RxJS?
+The map operator is a transformation operator in RxJS that applies a project function to each value emitted by an observable. It returns a new observable with the transformed values, leaving the original observable unchanged. Just like JavaScript’s map, it processes values one-by-one, but works on data streams instead of arrays.

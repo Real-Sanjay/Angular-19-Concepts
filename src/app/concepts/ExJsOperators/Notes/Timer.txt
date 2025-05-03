@@ -1,0 +1,116 @@
+RxJS timer() Operator
+What is the timer() operator?
+The timer() operator creates an observable that:
+Emits its first value after a specified delay (due time).
+Optionally, emits subsequent values at regular intervals.
+
+Example 1: Emit once after delay
+import { timer } from 'rxjs';
+const source$ = timer(2000); // emit after 2 seconds
+
+source$.subscribe(value => {
+  console.log(value); // Output: 0 (emitted after 2 seconds)
+});
+
+Example 2: Emit repeatedly after an initial delay
+const repeated$ = timer(2000, 1000); // emit first after 2s, then every 1s
+repeated$.subscribe(value => {
+  console.log(value); // Output: 0, 1, 2, 3... (0 after 2s, rest every 1s)
+});
+timer() Parameters
+
+Parameter	          Description
+dueTime	              Time to wait before the first emission (number or Date)
+period (optional)	  Interval between subsequent emissions
+scheduler (optional)  Custom async scheduler (e.g., asyncScheduler)
+
+Comparison: timer() vs interval()
+
+Feature	                timer()	                                interval()
+First emission      	After specified delay (dueTime)	        After initial interval
+Subsequent emissions	Optional (can emit once or repeatedly)	Always emits repeatedly
+Can emit once?      	✅ Yes	                              ❌ No, emits infinitely
+
+Example: timer vs interval in action
+import { timer, interval } from 'rxjs';
+timer(0).subscribe(val => console.log('Timer:', val));      // emits immediately
+interval(1000).subscribe(val => console.log('Interval:', val)); // emits every 1s
+
+Output:
+Timer: 0         ← immediately
+Interval: 0      ← after 1 second
+Interval: 1
+Interval: 2 ...
+
+
+
+Exercise: 
+
+
+RxJS timer() Operator with Loading Spinner (Real-World Example)
+Objective:
+Simulate a delayed data fetch by using RxJS timer() and show a CSS-based loading spinner for a few seconds before displaying the actual content.
+
+Step-by-Step Implementation
+1. Component Logic (.ts)
+import { Component, OnInit } from '@angular/core';
+import { timer } from 'rxjs';
+
+@Component({
+  selector: 'app-loader',
+  templateUrl: './loader.component.html',
+  styleUrls: ['./loader.component.css']
+})
+export class LoaderComponent implements OnInit {
+  isLoading: boolean = true; // controls spinner
+  dataMessage: string = ''; // simulated data fetched after delay
+
+  ngOnInit(): void {
+    timer(3000).subscribe(() => {
+      this.isLoading = false;
+      this.dataMessage = '✅ Data fetched successfully!';
+    });
+  }
+}
+
+
+2. Template (.html)
+html
+Copy
+Edit
+<div *ngIf="isLoading; else dataTemplate">
+  <!-- Spinner animation (CSS-based) -->
+  <div class="spinner"></div>
+</div>
+
+<ng-template #dataTemplate>
+  <!-- Data to display after loading -->
+  <p>{{ dataMessage }}</p>
+</ng-template>
+3. Simple CSS for Spinner (.css)
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 6px solid #ccc;
+  border-top-color: #1d72b8;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 50px auto;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+📌 Summary
+timer(3000) emits once after 3 seconds.
+The component initially shows a spinner (isLoading = true).
+After 3 seconds, the isLoading flag is set to false, hiding the spinner.
+Then, a success message or fetched data is shown.
+
+Use Cases
+Simulating a data fetch delay from a backend API.
+Introducing intentional delay in transitions for UX polish.
+Loading indicators in dashboards, cards, modals, etc.

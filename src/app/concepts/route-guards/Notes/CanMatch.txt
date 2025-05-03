@@ -1,0 +1,61 @@
+CanMatch Guard in Angular
+What is CanMatch?
+Introduced: Angular v14.2
+Purpose:
+Handle multiple routes with the same path based on conditions.
+Lazy load the correct module or component depending on user roles, permissions, or other checks.
+
+Behavior:
+If CanMatch returns true, that route is selected and activated.
+If CanMatch returns false, Angular tries the next matching route with the same path.
+
+Example :
+
+Scenario	               Behavior
+No CanMatch guard	       First matching route (admin module) is loaded by default
+With CanMatch guard        checking localStorage role	If role is admin, load AdminModule, otherwise UserModule
+
+How CanMatch Works Internally
+It takes two arguments:
+route: The Route object.
+segments: An array of URLSegment (path parts).
+
+✅ If true → load that module.
+❌ If false → check next available route with the same path.
+
+Note: If no route matches (if every CanMatch returns false), you'll get an error like:
+
+Cannot match any routes
+Solution: Always ensure at least one fallback route matches, or a wildcard ** route exists.
+
+Quick Example of CanMatch Guard Logic:
+
+canMatch(route: Route, segments: UrlSegment[]): boolean {
+  const role = localStorage.getItem('role');
+  console.log('User Role:', role);
+  
+  if (role === 'admin') {
+    return true; // Load Admin module
+  }
+  
+  return false; // Skip to next matching route
+}
+
+
+Quick Difference Table: CanLoad vs CanMatch
+
+Feature	            CanLoad	                                    CanMatch
+Purpose	            Prevent loading a module if unauthorized	Select between same-path routes based on conditions
+Cancels Navigation?	Yes, blocks loading the module entirely	    No, tries next matching route
+Matching Routes?	Not applicable	                            Handles multiple matching routes
+Usage	            Restrict lazy loading of modules	        Load different modules/components conditionally
+
+Key Point:
+CanMatch doesn't stop navigation like CanLoad.
+It simply skips the current route if false and tries another one that matches.
+
+In Summary:
+Use CanLoad → when you want to block a module from even downloading if user not authorized.
+
+Use CanMatch → when you have same paths but need to select different modules based on user role, settings, permissions, etc.
+

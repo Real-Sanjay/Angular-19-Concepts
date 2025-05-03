@@ -1,0 +1,71 @@
+Best Practices & Optimization Strategies
+1. Keep Templates Simple
+Avoid:
+
+<!-- ❌ Avoid this -->
+<div>{{ computeHeavyCalculation() }}</div>
+Prefer:
+
+
+// ✅ Compute once and bind result
+computedValue = this.heavyCalculation();
+2. Use Getter Functions Carefully
+Avoid placing logic-heavy getters in templates:
+
+
+get expensiveData() {
+  console.log('Getter called!');
+  return complexCalculation();
+}
+Angular reevaluates them every change detection cycle.
+
+3. Detach Unnecessary Change Detection
+If a code block (like a setTimeout) doesn’t affect the UI:
+
+
+constructor(private ngZone: NgZone) {}
+
+ngOnInit() {
+  this.ngZone.runOutsideAngular(() => {
+    setTimeout(() => {
+      console.log('Timer expired'); // ✅ No change detection triggered
+    }, 6000);
+  });
+}
+This prevents Zone.js from notifying Angular, saving performance.
+
+4. Avoid Zone Pollution
+Zone pollution happens when unnecessary async events trigger change detection.
+
+Prevent this with runOutsideAngular().
+
+Useful in animations, analytics logging, timers, or web workers.
+
+5. Leverage ChangeDetectionStrategy.OnPush
+By default, Angular uses ChangeDetectionStrategy.Default:
+
+Re-checks all components every cycle.
+
+With OnPush, Angular will only check:
+
+When @Input() data changes.
+
+When an event originates from the component.
+
+When markForCheck() is manually called.
+
+
+@Component({
+  selector: 'my-component',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  ...
+})
+6. Use Signals for Reactive State
+Signals allow you to track reactive state updates efficiently:
+
+
+count = signal(0);
+increment() {
+  this.count.update((val) => val + 1);
+}
+Signals work well with OnPush, reducing the need for manual markForCheck() calls.

@@ -1,0 +1,104 @@
+Cold vs Hot Observables in Angular (RxJS)
+Cold Observables
+A cold observable starts emitting values only when a subscriber subscribes.
+Each subscriber gets its own independent execution and fresh data stream.
+Emission logic is inside the observable, hence execution is lazy — nothing happens until subscription.
+
+Key Characteristics:
+Values are produced per subscription.
+Each subscriber receives its own copy of the emitted data.
+No emissions are missed because values are generated fresh for every subscriber.
+
+Real-Life Analogy:
+YouTube Video:
+Each user watches independently from the beginning, whenever they start.
+
+Example:
+
+import { Observable } from 'rxjs';
+
+const coldObservable = new Observable<number>((observer) => {
+  const randomNum = Math.floor(Math.random() * 100);
+  observer.next(randomNum);
+  observer.complete();
+});
+
+// Two independent subscriptions
+coldObservable.subscribe((data) => console.log('Subscriber A:', data));
+coldObservable.subscribe((data) => console.log('Subscriber B:', data));
+Console Output might be:
+
+Subscriber A: 42
+Subscriber B: 17
+Each subscriber gets a different random number!
+
+Use Cases:
+
+HTTP API calls (fetching fresh data individually).
+File uploads/downloads (separate for each user).
+
+Hot Observables
+A hot observable starts emitting immediately, even before any subscriber subscribes.
+Subscribers may miss some emissions if they subscribe late.
+Hot observables share a single execution among all subscribers — multicasting behavior.
+
+Key Characteristics:
+Emission happens independently of subscription.
+All subscribers share the same emitted data.
+Late subscribers may miss previous values.
+
+Real-Life Analogy:
+
+Live Stream (e.g., live sports event):
+If you join late, you miss what already happened!
+
+Example:
+
+import { Observable } from 'rxjs';
+
+const randomNum = Math.floor(Math.random() * 100);
+
+const hotObservable = new Observable<number>((observer) => {
+  observer.next(randomNum);
+  observer.complete();
+});
+
+// Two subscribers sharing same value
+hotObservable.subscribe((data) => console.log('Subscriber A:', data));
+hotObservable.subscribe((data) => console.log('Subscriber B:', data));
+Console Output will be:
+
+Subscriber A: 56
+Subscriber B: 56
+Both subscribers get the same value!
+
+Use Cases:
+
+WebSocket data streams (real-time chats, live prices).
+
+Live tracking applications (e.g., GPS, stock markets).
+
+Extra Note: Subjects and Multicasting
+Subjects and BehaviorSubjects are special types of observables that behave like hot observables.
+They push values to multiple subscribers simultaneously.
+
+Example with Subject:
+import { Subject } from 'rxjs';
+
+const subject = new Subject<number>();
+
+subject.subscribe((data) => console.log('Subscriber A:', data));
+subject.subscribe((data) => console.log('Subscriber B:', data));
+
+subject.next(100);
+Both subscribers receive 100 at the same time.
+
+
+
+In Short:
+
+Aspect	                                Cold Observable	                       Hot Observable
+When Values Emit?	                    Only when subscribed	               Emits independently of subscriptions
+Multiple Subscribers?	                Each gets a fresh execution(separate)  All share the same execution (multicast)
+Example	YouTube Video (watch anytime)	Live Stream (join ongoing)
+Use Cases	                            HTTP calls, file downloads	            WebSockets, stock market updates

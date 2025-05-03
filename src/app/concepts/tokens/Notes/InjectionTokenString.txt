@@ -1,0 +1,82 @@
+What is a String-Based Injection Token in Angular?
+In Angular, tokens help the Dependency Injection (DI) system identify what dependency to inject.
+Instead of using a class (type token) as the token, you can also use a string.
+These are known as string-based tokens, and they work similarly to class tokens, but with a small twist.
+
+Why Use String Tokens?
+When you don’t have a class to represent your dependency (like a config object).
+When you want to provide different versions of the same service or value under different names.
+They can also be used to make DI more flexible — but should be used carefully to avoid name collisions.
+
+Practical Example:
+Step 1: Create the Service
+code:
+// log-message-one.service.ts
+export class LogMessageOneService {
+  log(): void {
+    console.log('Log from Service One');
+  }
+}
+Step 2: Provide the Service Using a String Token
+code:
+// app.component.ts
+import { Component, Inject, OnInit } from '@angular/core';
+import { LogMessageOneService } from './services/log-message-one.service';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  providers: [
+    {
+      provide: 'LOG_MESSAGE_ONE', //  string token
+      useClass: LogMessageOneService
+    }
+  ]
+})
+export class AppComponent implements OnInit {
+
+  constructor(
+    @Inject('LOG_MESSAGE_ONE') private logger: LogMessageOneService
+  ) {}
+
+  ngOnInit(): void {
+    this.logger.log();
+  }
+}
+
+@Inject('LOG_MESSAGE_ONE') tells Angular:
+“Hey, don’t guess which service I want — use this exact token to resolve the dependency.”
+
+Why Do We Need the @Inject() Decorator?
+Normally, Angular can look at the type in the constructor and figure out what to inject:
+
+code:
+constructor(private myService: MyService) {}  // Angular guesses based on type
+But if you’re using non-class tokens (like strings, objects, symbols), Angular can’t guess.
+
+So you need to explicitly tell Angular what token to use via @Inject():
+
+code:
+constructor(@Inject('TOKEN_NAME') private myService: SomeService) {}
+
+What Happens If You Forget @Inject()?
+You’ll see an error like:
+NullInjectorError: No provider for Object!
+That’s Angular saying:
+
+“You gave me a string token but didn’t tell me which one to use!”
+
+⚠️ Best Practice Tip:
+Avoid using duplicate string tokens. They can override each other silently, which leads to confusing bugs.
+
+Instead: 
+✅ Always create unique token strings, or better —
+✅ Use InjectionToken for better safety (we’ll cover this next if you’re ready!)
+
+📌 Summary
+
+Concept	Meaning
+String Token	    A string used as a key to register and resolve dependencies
+@Inject()	        A decorator that tells Angular what token to use
+Why Needed	        Angular can’t guess what to inject from a string — so you must tell it
+Common Use Case	    When you want to inject configs, values, or multiple versions of a service

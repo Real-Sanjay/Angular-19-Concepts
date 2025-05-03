@@ -1,0 +1,57 @@
+RxJS filter Operator
+What Is It?
+The filter operator in RxJS is used to emit only those items from the source observable that satisfy a given condition.
+This condition is provided by a predicate function, which returns true or false.
+
+Similar to: JavaScript’s Array.prototype.filter(), but for observables.
+
+Basic Syntax
+import { from } from 'rxjs';
+import { filter } from 'rxjs/operators';
+
+const source$ = from([1, 2, 3, 4, 5, 6]);
+
+source$.pipe(
+  filter(value => value % 2 === 0)  // Only even numbers
+).subscribe(val => console.log(val));
+📤 Output:
+
+2
+4
+6
+
+How the Predicate Function Works
+Receives each emitted value.
+Returns:
+true → emit the value.
+false → skip the value.
+
+Example: Filtering Objects by Property
+
+import { from } from 'rxjs';
+import { filter } from 'rxjs/operators';
+
+const people$ = from([
+  { name: 'Alice', age: 28 },
+  { name: 'Bob', age: 34 },
+  { name: 'Charlie', age: 22 },
+  { name: 'David', age: 40 }
+]);
+
+people$.pipe(
+  filter(person => person.age >= 30)
+).subscribe(person => console.log(`${person.name}: ${person.age}`));
+
+Output:
+Bob: 34
+David: 40
+val represents each emitted object, and you can access its properties directly in the predicate.
+
+When to Use filter
+To exclude unwanted values (e.g., nulls, duplicates, invalid entries).
+To emit values matching specific criteria (e.g., status, category, age).
+To streamline data processing before transforming or combining it.
+
+Summary
+The filter operator is powerful and intuitive. It allows you to extract only the data you need from a stream based on custom logic, making your observable pipelines more efficient and focused.
+

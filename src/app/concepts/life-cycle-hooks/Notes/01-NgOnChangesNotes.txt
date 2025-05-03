@@ -1,0 +1,67 @@
+ What is ngOnChanges?
+ngOnChanges is a lifecycle hook in Angular.
+It is triggered every time there is a change in input properties (decorated with @Input()) of a component.
+Useful for responding to changes passed from parent to child components.
+
+
+🧪 Example Scenario Breakdown
+🧱 Step-by-Step:
+In AppComponent (Parent):
+
+A property inputValue: string is defined.
+The value of this property will be passed to the child.
+
+Note:
+Angular vs Regular Class Instantiation:
+In a regular class, the constructor is triggered when using new.
+Angular handles component instantiation behind the scenes, not with new.
+
+
+In TestComponent (Child):
+Implements OnChanges interface from Angular core.
+Declares @Input() inputValue: string; to receive the prop.
+Defines ngOnChanges(changes: SimpleChanges) method.
+Binding Input in Template:
+
+code:
+<app-test [inputValue]="inputValue"></app-test>
+inputValue inside [] is from child.
+inputValue outside [] is from parent (AppComponent).
+
+Inside ngOnChanges Method:
+
+child component code:
+ngOnChanges(changes: SimpleChanges) {
+  console.log('ngOnChanges triggered');
+  console.log(changes);
+}
+changes contains detailed metadata about input changes.
+
+🧾 SimpleChanges Interface Properties:
+When a change occurs, Angular provides an object of type SimpleChanges with the following:
+
+Property	                Description
+previousValue	            The previous value of the input property.
+currentValue	            The new updated value of the input property.
+firstChange	Boolean flag;   true if this is the first change.
+
+
+💬 Common Questions
+1. What is the purpose of ngOnChanges?
+It detects and handles changes in component input properties.
+Called before ngOnInit, whenever input properties change.
+
+2. How is ngOnChanges different from ngOnInit?
+ngOnChanges	                    ngOnInit
+Called on every input change	Called once, after component init
+Triggered before init	        Triggered after first change detection
+
+3. Can it detect non-input property changes?
+❌ No.
+ngOnChanges only tracks changes to properties decorated with @Input().
+
+When to Use ngOnChanges
+Use this hook when:
+You want to respond immediately to changes from parent components.
+You need to track input history (previousValue vs currentValue).
+You want to trigger logic (e.g., update fields, fetch data) based on changed input.

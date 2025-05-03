@@ -1,0 +1,77 @@
+What is ngAfterContentInit in Angular?
+Definition:
+ngAfterContentInit is a lifecycle hook in Angular that is called once after Angular projects external content into the component using <ng-content>.
+
+When does it run?
+It runs after the first ngDoCheck().
+It is called only once, even if projected content changes later.
+
+🧱 What is Content Projection?
+➡️ Content Projection:
+It's a technique used to pass HTML elements (not just data) from a parent component to a child component.
+
+➡️ Why not @Input()?
+@Input() passes primitive or object values, but not full HTML or templates. That’s where ng-content comes in.
+
+🧩 Example:
+Parent Component HTML:
+<app-child>
+  <div style="color: blue;">Projected content</div>
+</app-child>
+
+Child Component HTML:
+<div>
+  <ng-content></ng-content>
+</div>
+
+🔄 Lifecycle Order (Simplified):
+ngOnInit() → after component’s input properties initialized.
+
+ngDoCheck() → runs on every change detection.
+
+ngAfterContentInit() → after content (via <ng-content>) has been projected.
+
+
+🔬 When to Use ngAfterContentInit?
+Use it when:
+You need to interact with projected content (from parent to child).
+You are using @ContentChild() to access a projected DOM or component.
+You want to run logic after the DOM inside <ng-content> is available.
+
+💡 Difference Between ngOnInit() vs ngAfterContentInit()
+Feature	                  ngOnInit()	                        ngAfterContentInit()
+Trigger Time	          After component initialization	    After content is projected via <ng-content>
+Projected Content Ready?  Not guaranteed	                    Yes
+Called How Many Times?	  Once	                                Once
+Use Case	              Setup input data, services, etc.	    Setup projected DOM, interact with content child
+
+🛠️ Example: Using @ContentChild with ngAfterContentInit
+
+// test.component.ts
+@ContentChild('projectedDiv') projected!: ElementRef;
+
+ngAfterContentInit() {
+  console.log('ngAfterContentInit called');
+  console.log('Projected Content:', this.projected.nativeElement);
+}
+
+Edit
+<!-- app.component.html -->
+<app-test>
+  <div #projectedDiv>I am projected content</div>
+</app-test>
+
+❓What Happens If Projected Content Changes Later?
+ngAfterContentInit() is NOT called again.
+Use ngDoCheck() or Angular’s reactive patterns (@Input(), BehaviorSubject, etc.) to detect updates.
+
+Interview Style Questions and Answers
+Q1: What is ngAfterContentInit?
+It is a lifecycle hook that is called once after Angular has fully initialized all content projected into a component using <ng-content>.
+
+Q2: When would you use ngAfterContentInit instead of ngOnInit?
+When your logic depends on content projected from a parent using <ng-content>. Unlike ngOnInit, this hook guarantees that the projected content is fully available.
+
+Q3: Does ngAfterContentInit run when projected content changes?
+No. It runs only once. To handle updates, use ngDoCheck() or reactive patterns.
+

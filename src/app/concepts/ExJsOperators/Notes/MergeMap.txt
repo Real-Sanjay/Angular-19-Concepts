@@ -1,0 +1,54 @@
+ RxJS mergeMap (aka flatMap)
+What is it?
+mergeMap is a higher-order mapping operator used to map each value from a source observable to an inner observable, then merge all inner observable results into one output observable.
+
+It’s used to flatten nested observables.
+
+Syntax:
+import { from, of } from 'rxjs';
+import { mergeMap } from 'rxjs/operators';
+
+const outer$ = from([1, 2, 3]);
+
+const inner = (val: number) => of(val * 2);
+
+const flattened$ = outer$.pipe(
+  mergeMap(value => inner(value))
+);
+
+flattened$.subscribe(console.log);
+Output:
+2
+4
+6
+Explanation:
+from([1, 2, 3]) emits 1, then 2, then 3.
+Each value is passed into mergeMap.
+For each value, inner(val) returns a new observable.
+mergeMap subscribes to each inner observable and flattens all results into one output stream.
+
+Common Use Case
+Example: Making multiple HTTP calls based on IDs
+this.userIds$ = of([1, 2, 3]);
+
+this.users$ = this.userIds$.pipe(
+  mergeMap(id => this.http.get(`/api/users/${id}`))
+);
+Here, mergeMap helps when a value triggers an async operation (like an API call), and you want to merge all responses into one observable stream.
+
+ map vs mergeMap
+
+Feature	                map	                                                                 mergeMap
+Output	                Transformed value	                                            Inner observable's emitted value
+Observable Nesting	    Returns observable if mapped to one	                            Automatically flattens nested observables
+Mapping	                1 → 1	                                                        1 → Many (or 1 → Observable)
+Use case	Sync transformation	Async (e.g. HTTP calls, nested observables)
+Important: map does not auto-subscribe to inner observables — it returns a higher-order observable. mergeMap does both: map + flatten.
+
+Summary Answers for Interview
+Q1: What is the mergeMap operator used for?
+A: The mergeMap operator is used to map each value from a source observable to a new (inner) observable and then flatten all emitted values from those inner observables into a single observable stream. It's typically used for asynchronous operations like HTTP calls or nested streams.
+
+Q2: Difference between map and mergeMap?
+A: map transforms each value and returns a single value (or observable if needed), but doesn’t handle nested subscriptions. mergeMap, on the other hand, transforms each value into an observable and automatically flattens and merges the output, making it ideal for handling async operations or nested observables.
+

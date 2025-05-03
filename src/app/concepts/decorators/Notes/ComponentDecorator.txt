@@ -1,0 +1,55 @@
+ What is @Component?
+The @Component decorator tells Angular that a class is a component and provides metadata that Angular uses to:
+Create
+Render
+Style
+Interact with the component
+
+🛠️ Core Properties of @Component
+Property	           Purpose
+selector	           Defines the custom tag used in templates (<app-root></app-root>)
+standalone	           Allows the component to be used without declaring in an NgModule
+imports	               Modules or directives needed (like RouterModule, CommonModule)
+templateUrl	           Path to the HTML file for this component
+styleUrls	           Path(s) to CSS or SCSS file(s) for styling the component
+
+✍️ Example: A Simple Component
+code:
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
+@Component({
+  selector: 'app-greeting',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './greeting.component.html',
+  styleUrls: ['./greeting.component.css']
+})
+export class GreetingComponent {
+  name = 'Sanjay';
+}
+
+In app.component.html, you could now use:
+<app-greeting></app-greeting>
+And Angular will render the component’s HTML inside that tag.
+
+✅ Extra @Component Properties You Can Use
+Property	        Description
+template	        You can directly write inline HTML like template: '<h1>Hello</h1>'
+styles	            Inline styles instead of external file: styles: ['h1 { color: red; }']
+animations	        Add Angular animations
+providers	        Provide services specifically for this component
+changeDetection	    Optimize performance with ChangeDetectionStrategy.OnPush
+
+Why is standalone: true a big deal?
+Before Angular 14, every component had to be declared inside a module.
+But now with standalone: true, you can create fully self-contained components.
+This makes it easier to:
+Write reusable components
+Do better lazy loading
+Reduce complexity in small projects
+
+📌 Summary
+@Component is a class decorator that tells Angular how to process and display a component.
+Core properties include selector, standalone, imports, templateUrl, and styleUrls.
+standalone is especially useful in modern Angular for modular, plug-and-play components.

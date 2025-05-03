@@ -1,0 +1,76 @@
+ What Are Services in Angular?
+A service in Angular is a reusable piece of logic (usually a class with methods and/or data) that performs tasks like:
+Fetching or manipulating data,
+Sharing data across components,
+Business logic processing,
+Utility/helper functions.
+
+Key Points from Your Example:
+Creating a Service:
+ng generate service dependencies/employee
+
+Structure of the Service:
+Decorated with @Injectable({ providedIn: 'root' })
+Has a TypeScript class (e.g., EmployeeService)
+Contains logic like an employees array, and methods like:
+
+getEmployees(): Employee[] { ... }
+getEmployeeById(id: number): Employee | undefined { ... }
+
+Injecting the Service in a Component: In the component TS file:
+code:
+
+constructor(private employeeService: EmployeeService) {}
+Using the Service Methods:
+
+code:
+
+this.employees = this.employeeService.getEmployees();
+this.employee = this.employeeService.getEmployeeById(id);
+
+Displaying Data in HTML: With structural directives like *ngIf and *ngFor, and (click) event binding.
+
+How Dependency Injection Works in Angular:
+Angular uses DI to automatically provide services to components.
+
+You don’t need to manually create service instances; Angular does it for you when you declare it in the constructor.
+
+Singleton Nature:
+Since services are provided at the root level (providedIn: 'root'), Angular creates one instance of that service for the whole application (unless configured otherwise).
+
+
+Concept Questions:
+📌 1. What is a Service in Angular?
+A service is a TypeScript class that contains logic and data, which can be shared across multiple components. It’s used to abstract common functionality such as data retrieval, business logic, or utility functions.
+
+📌 2. How do you create a service and inject it into a component?
+To create:
+ng generate service service-name
+To inject:
+code:
+constructor(private myService: MyService) {}
+Angular handles the rest through dependency injection.
+
+📌 3. What is the role of @Injectable()?
+It marks a class as available for DI.
+When you use @Injectable({ providedIn: 'root' }), the service is registered at the root level (available throughout the app).
+
+📌 4. What is Dependency Injection in Angular?
+Dependency Injection is a design pattern used to supply objects (like services) to a class rather than the class creating them itself. Angular uses this to efficiently share service instances across components.
+
+📌 5. Why use services instead of handling logic inside components?
+Using services:
+Promotes code reusability and separation of concerns.
+Makes unit testing and debugging easier.
+Keeps components focused on presentation, not logic.
+
+📌 6: Can you inject a service using both constructor and inject() in the same component or service?
+Technically yes, Angular allows both approaches. However, it's not recommended to mix both within the same class. You should stick with one approach to keep the code clean and maintainable. Use the constructor for traditional class-based components, and inject() for functional contexts or where constructor injection is not suitable.
+
+📌 7: How does Angular resolve dependencies when a service is injected using the inject() function?
+When inject() is called, Angular looks up the injector tree to find the appropriate provider (similar to how it works with constructor injection). If the service is defined in the component’s providers array, Angular creates a new instance specific to that component. If it's provided at the root or module level, the singleton instance is used.
+
+📌 8: What are the limitations of the inject() method?
+inject() can only be called inside the body of a function, not globally or outside Angular’s injection context.
+It cannot be used inside class constructors or outside of Angular-managed code.
+It’s harder to test in some cases compared to constructor injection due to tight coupling.

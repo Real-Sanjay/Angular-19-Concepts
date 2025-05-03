@@ -1,0 +1,71 @@
+What Are Pipes in Angular?
+Pipes are a template feature in Angular used to transform data before displaying it in the view.
+They are simple, powerful, and make your templates cleaner by avoiding extra logic in the component class.
+
+Syntax of a Pipe
+{{ value | pipeName:arg1:arg2 }}
+
+Common Built-in Pipes
+
+Pipe	    Purpose	                    
+uppercase	Converts text to uppercase	
+lowercase	Converts text to lowercase	
+titlecase	Capitalizes the first letter of each word	
+date	    Formats a date	
+currency	Formats a number as currency	
+percent	    Formats number as percentage	
+slice	    Returns a slice of a string or array	
+
+Real-World Example: Formatting Employee Table
+
+Component Code
+
+export class AppComponent {
+  title = 'angular pipes demo';
+  showDate = new Date();
+  employees = [
+    { name: 'john doe', state: 'California', salary: 55000 },
+    { name: 'jane smith', state: 'Texas', salary: 62000 },
+    { name: 'mike jordan', state: 'New York', salary: 70000 }
+  ];
+}
+
+Template Code
+code:
+<h1 style="text-align: center;">{{ title | uppercase }}</h1>
+<p style="text-align: center;">Today's Date: {{ showDate | date:'MMMM d, y' | uppercase }}</p>
+
+<div style="display: flex; justify-content: center; margin-top: 30px;">
+  <table style="width: 70%; text-align: center; border-collapse: collapse; font-family: Arial;">
+    <tr>
+      <th style="padding: 8px; font-size: 1.2rem; border: 1px solid #444;">Name</th>
+      <th style="padding: 8px; font-size: 1.2rem; border: 1px solid #444;">State</th>
+      <th style="padding: 8px; font-size: 1.2rem; border: 1px solid #444;">Salary</th>
+    </tr>
+    <tr *ngFor="let emp of employees">
+      <td style="padding: 8px; border: 1px solid #444;">{{ emp.name | titlecase }}</td>
+      <td style="padding: 8px; border: 1px solid #444;">{{ emp.state | slice:0:3 | uppercase }}</td>
+      <td style="padding: 8px; border: 1px solid #444;">{{ emp.salary | currency:'USD' }}</td>
+    </tr>
+  </table>
+</div>
+🖼 Output
+
+Name	        State	    Salary
+John Doe	    CAL	        $55,000.00
+Jane Smith	    TEX	        $62,000.00
+Mike Jordan	    NEW	        $70,000.00
+
+Key Points to Remember
+Pipes are pure functions – they return the same output for the same input.
+You can chain multiple pipes – they are evaluated left to right.
+
+code:
+{{ message | slice:0:5 | uppercase }}
+
+Use Case Recap
+In this example:
+titlecase was used to format names nicely.
+slice + uppercase helped shorten and beautify the state name.
+currency transformed salary numbers into clean, readable currency format.
+We even used date to show the current date formatted with MMMM.

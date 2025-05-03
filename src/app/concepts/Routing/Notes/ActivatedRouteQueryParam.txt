@@ -1,0 +1,101 @@
+What Are Query Parameters in Angular?
+Query parameters allow you to pass optional data through the URL in a ?key=value format.
+They’re commonly used for filters, sorting, search terms, or temporary state.
+
+Example:
+URL:
+http://localhost:4200/employees?id=101&name=John
+Query Params:
+
+code:
+{
+  id: '101',
+  name: 'John'
+}
+
+Step-by-Step: Query Parameters Example
+Step 1: Define Employee Array
+code:
+// employees.component.ts
+employees = [
+  { id: 101, name: 'John' },
+  { id: 102, name: 'Jane' },
+  { id: 103, name: 'David' }
+];
+
+Step 2: Import and Inject ActivatedRoute
+code:
+import { ActivatedRoute } from '@angular/router';
+
+constructor(private route: ActivatedRoute) {}
+
+Step 3: Subscribe to Query Params
+code:
+id!: string;
+name!: string;
+
+ngOnInit(): void {
+  this.route.queryParams.subscribe(params => {
+    this.id = params['id'];
+    this.name = params['name'];
+    console.log('Query Params:', params);
+  });
+}
+
+queryParams is an Observable — meaning it reacts to changes in the URL while the component is active.
+
+Step 4: Template with routerLink and queryParams
+<!-- employees.component.html -->
+<h2>Employee List</h2>
+<ul>
+  <li *ngFor="let emp of employees">
+    <a [routerLink]="['/employees']" [queryParams]="{ id: emp.id, name: emp.name }">
+      {{ emp.name }}
+    </a>
+  </li>
+</ul>
+
+<h3>Selected Employee</h3>
+<p>ID: {{ id }}</p>
+<p>Name: {{ name }}</p>
+
+Step 5: Add <router-outlet>
+<!-- app.component.html -->
+<router-outlet></router-outlet>
+
+✅ Output:
+Clicking on John navigates to:
+
+http://localhost:4200/employees?id=101&name=John
+Console logs:
+code:
+Query Params: { id: '101', name: 'John' }
+
+Questions
+Q1: How to pass query parameters in Angular?
+Use [routerLink] with [queryParams]:
+
+<a [routerLink]="['/route']" [queryParams]="{ key: value }">Link</a>
+
+Q2: Why should you subscribe to queryParams?
+Because queryParams is an Observable.
+Subscribing lets you dynamically respond when query parameters change without reloading the component.
+This is useful in:
+Filtering/search
+Pagination
+Dynamic URL updates
+
+Q3: Can you use snapshot for query params?
+Yes, but only for static use — when the query params don’t change during the component’s lifecycle.
+
+code:
+const id = this.route.snapshot.queryParams['id'];
+const name = this.route.snapshot.queryParams['name'];
+
+
+Summary Table
+
+Feature	    snapshot.queryParams	queryParams.subscribe()
+Reactivity	❌ Static	✅ Reactive
+Use Case	First-time fetch	Track changes (filters/search)
+Returns	    Synchronous object	Observable stream

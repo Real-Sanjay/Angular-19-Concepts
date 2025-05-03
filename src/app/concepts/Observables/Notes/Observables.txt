@@ -1,0 +1,184 @@
+Working with Observables – next, error, complete Methods
+Purpose of Each Method in an Observable
+next()
+Used to emit values from the observable to subscribers.
+Each call to next() sends data to any active subscribers.
+
+Example:
+
+observer.next('Hello from Observable');
+error()
+
+Used to emit an error signal if something goes wrong.
+After error() is called:
+
+The observable terminates immediately.
+No more values will be emitted.
+
+Example:
+observer.error('An error occurred');
+complete()
+Signals that no more values will be emitted.
+After calling complete():
+The observable successfully terminates.
+Subscribers will not receive any more next() emissions.
+
+Example:
+
+observer.complete();
+Key Behaviors to Remember
+
+Situation	                                What Happens
+Calling error() after next()	            Emits an error and stops future emissions.
+Calling complete() after next()	            Signals successful completion; no further emissions.
+Calling next() after error() or complete()	Has no effect. Observable is already terminated.
+Order matters	                            Only first terminal method (error or complete) will affect.
+
+
+Example Code
+import { Observable } from 'rxjs';
+
+export class DemoComponent {
+  myObservable = new Observable((observer) => {
+    observer.next('First value');
+    observer.next('Second value');
+    // observer.error('Something went wrong!'); // Uncomment to simulate an error
+    setTimeout(() => {
+      observer.next('Third value after 2 seconds');
+      observer.complete(); // Signals observable is done
+    }, 2000);
+  });
+
+  constructor() {
+    console.log('Before subscribing');
+    this.myObservable.subscribe({
+      next: (value) => console.log('Received:', value),
+      error: (err) => console.error('Error:', err),
+      complete: () => console.log('Observable completed')
+    });
+    console.log('After subscribing');
+  }
+}
+
+
+Important Points
+Subscribing connects an observable and an observer.
+
+Callback methods inside .subscribe() handle:
+
+next → when a value is emitted
+
+error → when an error occurs
+
+complete → when observable finishes successfully
+
+Order of calling methods matters:
+
+Once error or complete is called, observable cannot emit any more next() values.
+
+Common Questions
+1.Explain the purpose of next(), error(), and complete() methods.
+They handle data emission, error handling, and completion of an observable.
+
+2.What happens if both next and error are called in an observable?
+After error() is called, the observable stops immediately. No further emissions happen.
+
+3.What happens if next() is called after complete() or error()?
+It has no effect. Observable is already considered closed.
+
+
+
+
+ Understanding Observable Subscription and Unsubscription
+Creating an Observable in Angular (or RxJS) allows you to define a sequence of data or events that occur over time.
+Think of it like opening a live data channel.
+When you subscribe to the observable, you're tuning into that channel to receive whatever is emitted.
+
+Resource Management
+When an observable is subscribed, resources like memory and timers are allocated to maintain the active connection.
+Therefore, it's essential to unsubscribe when you no longer need to receive data.
+
+Unsubscribing:
+Closes the connection.
+Frees up memory.
+Stops unnecessary background tasks (like timers, intervals, or network requests).
+Prevents memory leaks and performance issues.
+Angular and RxJS provide an unsubscribe() method on the Subscription object returned when you subscribe.
+Using it properly ensures your application stays fast and clean.
+
+Example: Counter Observable
+Let’s create an observable that emits incrementing numbers every second.
+
+code:
+import { Observable } from 'rxjs';
+
+export class CounterComponent {
+  counter$ = new Observable<number>((observer) => {
+    let count = 0;
+
+    const intervalId = setInterval(() => {
+      observer.next(count++);
+    }, 1000);
+
+    // Return cleanup logic
+    return () => {
+      clearInterval(intervalId);
+      console.log('Interval cleared');
+    };
+  });
+
+  subscription: any;
+
+  constructor() {
+    // Subscribing
+    this.subscription = this.counter$.subscribe((data) => {
+      console.log('Counter:', data);
+    });
+
+    // Unsubscribing after 5 seconds
+    setTimeout(() => {
+      this.subscription.unsubscribe();
+      console.log('Observable unsubscribed after 5 seconds');
+    }, 5000);
+  }
+}
+
+Here:
+We emit an incremented number every second.
+After 5 seconds, we manually unsubscribe.
+We also clear the interval inside the observable’s teardown logic to stop background tasks properly.
+
+Question:
+What's the difference between calling unsubscribe() manually vs letting the observable complete() naturally?
+
+Answer:
+unsubscribe()	                                                            complete()
+Called manually by the subscriber.	                                        Called internally by the observable itself.
+Forces immediate stop of emissions.	                                        Happens when the observable has no more values to emit naturally.
+Used when you want to stop early, before natural completion.	            Used when the observable finishes its planned task.
+No complete callback is triggered unless you handle it manually.	        Triggers the complete callback on subscriber if provided.
+Example: Stop a live stream after 5 seconds even if it could run forever.	Example: API request finishes fetching data and closes automatically.
+
+
+
+Quick Example to show both:
+code:
+const observable = new Observable<number>((observer) => {
+  observer.next(1);
+  observer.next(2);
+  observer.next(3);
+  observer.complete(); // completes naturally
+});
+
+const subscription = observable.subscribe({
+  next: (value) => console.log('Value:', value),
+  complete: () => console.log('Completed!'),
+});
+Here:
+No need to unsubscribe().
+It completes naturally after emitting 1, 2, and 3.
+
+In short:
+If your observable finishes its work (like an API call, short process) — let it complete() naturally.
+
+If your observable runs indefinitely (like timers, WebSocket connections) — you must manually unsubscribe() to avoid memory leaks.

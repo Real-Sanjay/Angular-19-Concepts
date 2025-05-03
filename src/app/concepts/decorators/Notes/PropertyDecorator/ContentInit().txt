@@ -1,0 +1,35 @@
+Key Differences between @ViewChild and @ContentChild
+
+Feature	                        @ViewChild	                                                                    @ContentChild
+Purpose	                Access elements or components from the component’s own template	                        Access projected content (i.e., content passed from parent to child using <ng-content>)
+When to Use	            When you want to access and manipulate elements inside the component's own view	        When you want to access and manipulate elements passed from outside (i.e., parent component)
+DOM Access	            Can manipulate DOM of its own component	                                                Can manipulate DOM of projected (transcluded) content
+Lifecycle Hook	        ngAfterViewInit()	                                                                        ngAfterContentInit()
+Example Use Case	    Calling a method of a child component or changing inner text of a button in template	Styling or manipulating projected content like <p>, <h3>, etc., passed from parent
+
+
+Summary of Lifecycle Hooks Used:
+ngAfterViewInit()
+Used with @ViewChild to ensure that the view (and the child components or DOM elements) has been initialized before accessing it.
+
+ngAfterContentInit()
+Used with @ContentChild because this hook is triggered after Angular projects the external content into the component's view. This ensures that the projected content is available for reference and manipulation.
+
+Real-Life Analogy:
+@ViewChild is like accessing things inside your own house — you can easily reach and modify your furniture (your own DOM/template elements).
+
+@ContentChild is like modifying a gift brought by a friend — the friend (parent component) brings something (HTML content), and once they hand it over (via <ng-content>), you can customize it (manipulate its styles, access its values, etc.).
+
+
+Questions Recap:
+1. What is the purpose of @ViewChild decorator?
+The @ViewChild decorator is used to get a reference to a DOM element, directive, or component present within the component’s own template. It allows for DOM manipulation or calling methods/properties of child components.
+
+2. What is the purpose of @ContentChild decorator?
+The @ContentChild decorator is used to get a reference to content projected into a component using <ng-content>. This is useful for accessing or modifying externally passed content.
+
+3. Which lifecycle hook is used with @ViewChild, and why?
+ngAfterViewInit() is used because it's called after the component's view (and its children) have been initialized. Accessing the view before this hook may result in undefined.
+
+4. Which lifecycle hook is used with @ContentChild, and why?
+ngAfterContentInit() is used because it's called after Angular projects external content into the component's view, making it the right place to interact with projected elements.

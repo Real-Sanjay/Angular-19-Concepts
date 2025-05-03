@@ -1,0 +1,90 @@
+Custom Preloading Strategy in Angular
+What is a Custom Preloading Strategy?
+A custom preloading strategy allows you to control which lazy-loaded routes are preloaded after the app's initial load — based on your custom logic.
+
+This helps balance performance (small initial bundle) and user experience (faster navigation).
+
+How to Implement a Custom Preloading Strategy
+Create a class that implements the PreloadingStrategy interface.
+Define the preload method inside the class.
+Use route data to mark which routes should be preloaded.
+Provide the custom strategy using withPreloading() in your app.config.ts.
+
+Code Example
+Step 1: Add data to routes
+
+code:
+const routes = [
+  {
+    path: 'dashboard',
+    loadComponent: () => import('./dashboard/dashboard.component').then(m => m.DashboardComponent),
+    data: { preload: true }
+  },
+  {
+    path: 'admin',
+    loadComponent: () => import('./admin/admin.component').then(m => m.AdminComponent),
+    data: { preload: false }
+  },
+  {
+    path: 'settings',
+    loadComponent: () => import('./settings/settings.component').then(m => m.SettingsComponent),
+    data: { preload: false }
+  }
+];
+Step 2: Create CustomPreloading.ts
+
+code:
+import { Injectable } from '@angular/core';
+import { Route, PreloadingStrategy } from '@angular/router';
+import { Observable, of } from 'rxjs';
+
+@Injectable({ providedIn: 'root' })
+export class CustomPreloadingStrategy implements PreloadingStrategy {
+  preload(route: Route, load: () => Observable<any>): Observable<any> {
+    if (route.data && route.data['preload']) {
+      console.log('Preloading:', route.path);
+      return load(); // preload this route
+    } else {
+      console.log('Not preloading:', route.path);
+      return of(null); // do not preload, return empty observable
+    }
+  }
+}
+Step 3: Register it inside app.config.ts
+
+code:
+import { provideRouter, withPreloading } from '@angular/router';
+import { CustomPreloadingStrategy } from './custom-preloading.strategy';
+
+export const appConfig = {
+  providers: [
+    provideRouter(routes, withPreloading(CustomPreloadingStrategy))
+  ]
+};
+
+Behavior After This Setup
+dashboard route → ✅ Preloaded after initial app load.
+admin and settings routes → 🚫 NOT preloaded — only loaded when navigated.
+Note: you can also add more fileds like  data: { preload: false, role: 'admin'} to load based on roles or etc
+
+Questions and Good Answers
+What is a custom preloading strategy?	It's a way to decide which lazy-loaded modules should be preloaded automatically based on custom conditions.
+How to preload some routes and not others?	Use the data property (like preload: true) in route config and check it in your custom strategy’s preload method.
+Why use a custom preloading strategy?	To optimize app performance by preloading only important routes while keeping the initial load size small.
+What can you use for custom preload conditions?	Route metadata, user roles, network speed, authentication state, user preferences, etc.
+
+Common Use Cases for Custom Preloading
+User Role Based Preloading
+(e.g., preload admin routes only for admins)
+
+Priority Preloading
+(e.g., preload dashboard, notifications, etc.)
+
+Network Speed Based
+(e.g., preload extra routes if user is on fast internet)
+
+Dynamic Preloading
+(e.g., based on user's past behavior or preferences)
+
+Feature Toggles
+(e.g., only preload feature modules that are enabled)

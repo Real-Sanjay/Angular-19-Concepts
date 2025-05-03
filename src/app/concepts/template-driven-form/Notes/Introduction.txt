@@ -1,0 +1,53 @@
+Understanding NgForm Directive vs NgForm Class
+🔹 NgForm Directive
+The NgForm directive is a built-in Angular directive used in template-driven forms.
+It is applied automatically when you use #myForm="ngForm" on a <form> element.
+It creates and associates an instance of the NgForm class to the form element in the template.
+This directive is responsible for:
+Enabling Angular’s two-way binding and validation.
+Tracking the form state (like valid, invalid, touched, untouched, etc.).
+Connecting NgModel directives to form controls.
+
+Example:
+
+code:
+<form #myForm="ngForm" (ngSubmit)="submitForm(myForm)">
+  <input name="username" [(ngModel)]="user.username" required />
+  <button type="submit">Submit</button>
+</form>
+
+🔸 NgForm Class
+The NgForm class comes from Angular’s @angular/forms module.
+It represents the structure and logic behind the form.
+When the ngForm directive is added to a form, it internally creates an instance of this class.
+This class provides important properties/methods like:
+form: the underlying FormGroup object.
+valid, invalid, pristine, dirty, etc.
+controls: access to individual form controls.
+
+TypeScript Usage:
+
+import { NgForm } from '@angular/forms';
+
+submitForm(form: NgForm) {
+  if (form.valid) {
+    console.log(this.user.username);
+    alert('Form Submitted!');
+  }
+}
+🆚 Summary: Directive vs Class
+
+Feature	            ngForm Directive	                NgForm Class
+What it is	        A directive applied on form	        A class managing form behavior
+Where it’s used	    In the template (HTML)	            In the component (TypeScript)
+Purpose	            Creates instance of NgForm	        Encapsulates form's logic and state
+How it's connected	Via #formName="ngForm"	            Via parameter in TS method
+
+Conclusion
+When you write:
+code:
+<form #myForm="ngForm" (ngSubmit)="submitForm(myForm)">
+You're telling Angular:
+"Please create an instance of the NgForm class using the ngForm directive and assign it to the reference myForm."
+Then, when the form is submitted, you get access to all its states and methods through the class instance in your component logic.
+

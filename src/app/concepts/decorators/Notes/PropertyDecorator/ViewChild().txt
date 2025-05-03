@@ -1,0 +1,105 @@
+What is @ViewChild() in Angular?
+@ViewChild() is a property decorator used to get a reference to a child component, directive, or DOM element in your component class. It’s like telling Angular:
+“Hey, once the view is loaded, I want access to this particular part of the DOM or component.”
+
+Two Primary Use Cases
+1. Accessing Child Components
+Use when you want to call a method or access a property from a child component.
+
+2. DOM Manipulation
+Use when you need to work directly with native DOM elements (like a button, input, etc.) — better than document.querySelector().
+
+Example 1: Accessing Child Component Method
+child.component.ts
+code:
+@Component({
+  selector: 'app-child',
+  template: `<p>Counter Value: {{ count }}</p>`
+})
+export class ChildComponent {
+  count: number = 0;
+
+  incrementCounter() {
+    this.count++;
+  }
+}
+
+app.component.ts
+code:
+export class AppComponent {
+  @ViewChild(ChildComponent) childComp?: ChildComponent;
+
+  incrementChildCounter() {
+    console.log('Before increment:', this.childComp?.count);
+    this.childComp?.incrementCounter();
+  }
+}
+
+app.component.html
+<h2>App Component</h2>
+<button (click)="incrementChildCounter()">Increment Counter</button>
+<app-child></app-child>
+
+Example 2: Accessing DOM Element
+app.component.html
+<button #btnRef>Increment</button>
+app.component.ts
+code:
+import { ElementRef, ViewChild, AfterViewInit } from '@angular/core';
+
+
+export class AppComponent implements AfterViewInit {
+  @ViewChild('btnRef') btn?: ElementRef<HTMLButtonElement>;
+
+  ngAfterViewInit() {
+    if (this.btn) {
+      this.btn.nativeElement.innerHTML = 'Counter ++';
+    }
+  }
+}
+
+📌 Important Notes
+Feature	                        Details
+@ViewChild('refName')	        Used for template reference variables (like #btnRef)
+@ViewChild(ChildComponent)	    Used to reference a component class directly
+ElementRef	                    A wrapper around native DOM elements
+nativeElement	                The actual DOM element you can manipulate
+ngAfterViewInit	                Lifecycle hook triggered after the view is fully initialized, perfect for safe DOM access
+
+Interview Q&A
+Q1: What is the purpose of the @ViewChild() decorator?
+A:
+It allows a parent component to access:
+A child component’s properties or methods
+A directive
+A DOM element (like a button or input)
+
+Useful for:
+Calling methods in child components
+Performing DOM manipulation
+Focusing elements, scrolling, etc.
+
+Q2: What is ElementRef?
+A:
+ElementRef is a wrapper around the native DOM element. It provides access via the .nativeElement property, allowing you to read or modify native DOM properties.
+
+Q3: Why is ngAfterViewInit used with @ViewChild()?
+A:
+Because the @ViewChild() reference is not available until after Angular has fully initialized the view. ngAfterViewInit is the lifecycle hook where the DOM and component references are fully ready.
+
+Q4: Is using @ViewChild() for component communication a good practice?
+A:
+Not always. For data communication, prefer @Input() and @Output().
+Use @ViewChild() only when:
+
+You need to call methods in a child component
+You’re dealing with native DOM manipulations
+
+Real-World Use Cases
+Focus on an input field after loading a form
+
+Scroll to a section using a button
+
+Reset a form from the parent component
+
+Play/pause a video using child component methods

@@ -1,0 +1,80 @@
+Why HTTP Requests?
+In any frontend application, interaction with the backend (like fetching data from a database or calling a REST API) is done using HTTP protocol. Traditionally, this is done via:
+fetch() API
+XMLHttpRequest (XHR)
+
+In Angular, we use:
+HttpClient (from @angular/common/http) — a powerful service for making HTTP requests, especially CRUD operations (Create, Read, Update, Delete).
+
+Step-by-Step: Angular HTTP GET Request
+1️⃣ Setup provideHttpClient()
+Since Angular 15+, using standalone components, you don’t need to import HttpClientModule. Instead, use:
+
+
+// app.config.ts or main.ts
+import { provideHttpClient } from '@angular/common/http';
+
+export const appConfig = {
+  providers: [
+    provideHttpClient()
+  ]
+};
+This enables HTTP services throughout your Angular app without needing a module.
+
+2️⃣ Inject HttpClient in the Component
+
+import { HttpClient } from '@angular/common/http';
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-user',
+  standalone: true,
+  templateUrl: './user.component.html'
+})
+export class UserComponent {
+  responseData: any;
+  loadData: boolean = false;
+
+  constructor(private http: HttpClient) {}
+
+  getData() {
+    this.http.get('https://jsonplaceholder.typicode.com/users')
+      .subscribe(data => {
+        this.responseData = data;
+        this.loadData = true;
+      });
+  }
+}
+3️⃣ Template Code with JSON Pipe and Button Binding
+
+<!-- user.component.html -->
+<button (click)="getData()">Get Data</button>
+
+<ng-container *ngIf="loadData">
+  <h3>User Data:</h3>
+  <pre>{{ responseData | json }}</pre>
+</ng-container>
+
+Key Concepts:
+Concept	                Explanation
+HttpClient	            Angular service to perform HTTP requests
+get()	                Used to retrieve data (GET method)
+subscribe()	            Executes the request and listens to response (Observables-based)
+JSON Pipe	            Converts JS object into readable JSON string for display
+standalone component	Angular’s modern structure (no NgModule), lighter and more modular
+provideHttpClient()	    Replaces HttpClientModule for standalone app setup
+
+ Output Behavior:
+Click the "Get Data" button.
+A GET request is made to the server (jsonplaceholder.typicode.com/users).
+Response is stored in responseData.
+Template conditionally displays the data using the JSON pipe.
+
+Summary
+Angular’s HttpClient is the go-to for all REST API communication.
+
+Using provideHttpClient() aligns with modern Angular best practices.
+
+HTTP requests return observables, which you must subscribe to.
+
+Use the | json pipe for clean display in the template.

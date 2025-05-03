@@ -1,0 +1,69 @@
+What is ngAfterContentChecked() in Angular?
+ngAfterContentChecked is a lifecycle hook in Angular that's triggered every time Angular checks the content projected into a component (via <ng-content>). This check happens after each change detection cycle.
+
+Why is this important?
+If you're using content projection (<ng-content>) and you want to perform logic when that content is re-checked, such as:
+Logging or debugging
+Validating inputs
+Tracking changes in content
+This hook helps you monitor or act every time that projected content is re-evaluated.
+
+✅ Key Characteristics
+Feature	            Description
+🔁 Frequency	    Called every change detection cycle
+🔄 Trigger	        Happens after Angular has checked projected content
+🔍 Useful for	    Validation, debugging, dynamic content handling
+⚠️ Warning	Can be a performance hit if the logic inside is heavy or poorly written
+
+
+Practical Example Overview
+Let’s say you’ve got a component like this:
+
+🔹 Parent Template
+html
+<app-child>
+  <h3 #projectedContent>Random Number: {{ data }}</h3>
+</app-child>
+<button (click)="generateRandom()">Generate</button>
+
+🔹 Child Template
+html
+<div>
+  <h2>Child Component</h2>
+  <ng-content></ng-content>
+</div>
+
+🔹 Child Component.ts
+ts
+export class ChildComponent implements AfterContentChecked {
+  ngAfterContentChecked(): void {
+    console.log('ngAfterContentChecked - projected content checked');
+  }
+}
+
+🔹 Parent Component.ts
+ts
+
+export class ParentComponent {
+  data: number = 0;
+
+  generateRandom() {
+    this.data = Math.floor(Math.random() * 100);
+  }
+}
+
+🧩 What happens under the hood?
+When the component is first initialized, ngAfterContentChecked() is fired.
+Any time the projected content ({{ data }}) updates (e.g., clicking "Generate"), it fires again.
+Internally, Angular uses multiple checks (even double check in development mode) to ensure the component is stable and up-to-date — this is why you see it invoked multiple times.
+
+📌 When would you use ngAfterContentChecked() instead of ngAfterContentInit()?
+
+Hook	               When it's Called	                        Use Case Example
+ngAfterContentInit	   Only once, after content is projected	Setup tasks after projection
+ngAfterContentChecked  Every time content is checked	        Validation, re-evaluation, debugging
+
+⚠️ Best Practice Reminder
+Avoid expensive computations or DOM manipulations in this hook.
+Don’t trigger change detection manually here (e.g., avoid updating values in this hook), or it can cause an infinite loop.
+
