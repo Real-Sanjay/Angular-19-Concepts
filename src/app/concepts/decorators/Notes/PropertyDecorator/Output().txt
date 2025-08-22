@@ -5,7 +5,7 @@ Used to send data from a child component to a parent component by emitting custo
 While @Input() is for parent → child communication,
 @Output() is for child → parent communication.
 
-🛠️ Syntax Breakdown
+ Syntax Breakdown
 1. Child Component (Emits the event)
 code:
 import { Component, Output, EventEmitter } from '@angular/core';
@@ -60,7 +60,7 @@ EventEmitter	Emits custom data (string, object, number, etc.)
 Syntax	        (customEvent)="handler($event)"
 Direction	    Child → Parent
 
-🔁 Real-World Usage Examples
+ Real-World Usage Examples
 Notify parent when a form is submitted from a child.
 Send selected item from a dropdown in a reusable child component.
 Trigger an update or refresh in parent when something changes in the child.

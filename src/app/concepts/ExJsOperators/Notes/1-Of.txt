@@ -32,7 +32,7 @@ const mixed$ = of(
 mixed$.subscribe(val => console.log(val));
 
 
-Question for Interviews:
+Questions:
 What is the purpose of the of() operator in RxJS?
 Answer:
 The of() operator creates an observable that emits a set of values in the given order and then completes. Each argument passed to of() becomes one emission in the stream.

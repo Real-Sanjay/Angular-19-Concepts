@@ -5,7 +5,7 @@ Commonly used to create or update resources.
 Takes a payload (body) along with the request.
 Returns a response, often with status or newly created object.
 
-Full Angular POST Implementation
+
 Component Code
 
 import { Component } from '@angular/core';
@@ -34,10 +34,12 @@ export class PostUserComponent {
 
 2️⃣ Template Code
 <button (click)="postData()">Send POST Request</button>
-🔧 Setting Up JSON Server (Mock Backend)
+
+Setting Up JSON Server (Mock Backend)
 Step 1: Install JSON Server globally
 
 npm install -g json-server
+
 Step 2: Create a users.json file
 
 {

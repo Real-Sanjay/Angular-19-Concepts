@@ -1,20 +1,20 @@
 Angular Routing Essentials
-✅ 1. What is Routing in Angular?
+ 1. What is Routing in Angular?
 Routing is how Angular allows navigation between components based on URL paths, without reloading the page — using client-side routing.
 
-✅ 2. Files Involved
+ 2. Files Involved
 app.routes.ts: Where all the route configurations are defined (paths + components).
 
 app.config.ts: Where the provideRouter() function is called to activate the route list.
 
-✅ 3. RouterOutlet
+ 3. RouterOutlet
 Acts like a placeholder to render the component based on the current route.
 
 Usually declared in app.component.html.
 code:
 <router-outlet></router-outlet>
 
-✅ 4. RouterLink
+ 4. RouterLink
 Used to link to routes without reloading the page. Example:
 code:
 <a routerLink="/home">Home</a>
@@ -23,7 +23,7 @@ Also usable with buttons:
 code:
 <button [routerLink]="['/employee', emp.id]">View</button>
 
-✅ 5. Static vs Dynamic Routing
+ 5. Static vs Dynamic Routing
 Feature	            Static Routing	                            Dynamic Routing
 Definition	        Fixed URL paths	                            URL with parameters
 Syntax	            { path: 'home', component: HomeComponent }	{ path: 'employee/:id', component: EmployeeComponent }

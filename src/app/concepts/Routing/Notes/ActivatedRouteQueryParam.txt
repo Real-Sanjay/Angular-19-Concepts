@@ -96,6 +96,6 @@ const name = this.route.snapshot.queryParams['name'];
 Summary Table
 
 Feature	    snapshot.queryParams	queryParams.subscribe()
-Reactivity	❌ Static	✅ Reactive
-Use Case	First-time fetch	Track changes (filters/search)
+Reactivity	❌ Static	          ✅ Reactive
+Use Case	  First-time fetch	      Track changes (filters/search)
 Returns	    Synchronous object	Observable stream

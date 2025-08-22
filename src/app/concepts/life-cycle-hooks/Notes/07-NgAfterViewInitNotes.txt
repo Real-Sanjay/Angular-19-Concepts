@@ -2,18 +2,18 @@ ngAfterViewInit Lifecycle Hook
 Definition
 ngAfterViewInit() is called once after Angular has fully initialized the component’s view, including all its child components' views.
 
- View vs Content
+View vs Content
 Term	Description
 View	Component class + its associated HTML (template)
 Content	Elements projected into the component using <ng-content> from parent
 
-✅ Use Cases
+Use Cases
 Accessing DOM elements via @ViewChild
 Manipulating or styling elements
 Initializing 3rd-party libraries that depend on DOM
 Performing calculations that require view to be rendered
 
-🔧 Example Walkthrough
+Example Walkthrough
 Let’s break the example into structured parts.
 
 1️⃣ Setup
@@ -23,7 +23,6 @@ You're projecting some content from AppComponent into TestComponent, and within 
 Here’s how your TestComponent might look:
 
 ts
-
 import {
   AfterViewInit,
   Component,
@@ -54,21 +53,20 @@ export class TestComponent implements AfterViewInit {
   }
 }
 
-✅ Now, once the component's view is initialized, this hook will:
+Now, once the component's view is initialized, this hook will:
 
 Apply styles to the wrapper div
 Log the element and confirm that the view is ready
 
-❓ Why Not ngOnInit?
+Why Not ngOnInit?
 🔄 Difference:
 ngOnInit is called before the view is fully rendered — DOM elements may not be available
 ngAfterViewInit is called after the view (and children) is ready — ideal for DOM manipulation
 
-⚠️ Common Pitfall: “Expression has changed after it was checked” Error
+Common Pitfall: “Expression has changed after it was checked” Error
 🔍 Scenario:
 You do something like this in ngAfterViewInit:
 
-ts
 export class AppComponent implements AfterViewInit {
   value = 'Initial value';
 
@@ -77,7 +75,7 @@ export class AppComponent implements AfterViewInit {
   }
 }
 
-❗ Result:
+Result:
 The view updates after Angular's change detection has already run once — Angular throws:
 ExpressionChangedAfterItHasBeenCheckedError
 
@@ -102,9 +100,10 @@ export class AppComponent implements AfterViewInit {
     }, 2000);
   }
 }
-✅ This works because the value is now changed after the first change detection cycle is complete.
 
-⚙️ Alternate Fix: ChangeDetectorRef
+This works because the value is now changed after the first change detection cycle is complete.
+
+Alternate Fix: ChangeDetectorRef
 Another clean approach:
 
 ts
@@ -124,9 +123,9 @@ export class AppComponent implements AfterViewInit {
     this.cdRef.detectChanges();  // Triggers another change detection
   }
 }
-🟡 Use this method with care — avoid doing this repeatedly or inside loops.
+Use this method with care — avoid doing this repeatedly or inside loops.
 
-🧠 Interview-Style Q&A
+Interview-Style Q&A
 Question	Answer
 Q1: What does ngAfterViewInit do?	It's called once after Angular initializes the component's view and its child views.
 Q2: Why not use ngOnInit instead?	Because DOM elements or view children might not be available in ngOnInit.

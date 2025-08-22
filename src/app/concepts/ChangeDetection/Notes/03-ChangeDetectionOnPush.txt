@@ -15,7 +15,7 @@ Trigger Type	                                Explanation
 @Input() value changes	                        Only reference changes, not internal mutations
 DOM events                                      (e.g., (click), (input))  bound inside the component
 Observable with async pipe	                    When a new value is emitted
-Manually via ChangeDetectorRef.markForCheck()	Forces CD in special cases
+Manually via ChangeDetectorRef.markForCheck()	  Forces CD in special cases
 Signals	                                        When updated, trigger only relevant component updates (ideal with OnPush)
 
 Behavior Illustration
@@ -72,7 +72,7 @@ Apps that heavily rely on mutation without observable state
 
 When you don’t want to track every reference change
 
-🧠 Summary Table
+ Summary Table
 Feature	                            Default Strategy	OnPush Strategy
 CD runs on all async events	               ✅	            ❌
 Child CD on parent update	               ✅	            ❌ (unless input changes)

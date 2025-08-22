@@ -34,7 +34,6 @@ import { Component } from '@angular/core';
 export class UserComponent {
   responseData: any;
   loadData: boolean = false;
-
   constructor(private http: HttpClient) {}
 
   getData() {
@@ -64,7 +63,7 @@ JSON Pipe	            Converts JS object into readable JSON string for display
 standalone component	Angular’s modern structure (no NgModule), lighter and more modular
 provideHttpClient()	    Replaces HttpClientModule for standalone app setup
 
- Output Behavior:
+Output Behavior:
 Click the "Get Data" button.
 A GET request is made to the server (jsonplaceholder.typicode.com/users).
 Response is stored in responseData.

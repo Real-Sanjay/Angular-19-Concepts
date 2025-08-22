@@ -5,7 +5,7 @@ Render
 Style
 Interact with the component
 
-🛠️ Core Properties of @Component
+ Core Properties of @Component
 Property	           Purpose
 selector	           Defines the custom tag used in templates (<app-root></app-root>)
 standalone	           Allows the component to be used without declaring in an NgModule
@@ -13,7 +13,7 @@ imports	               Modules or directives needed (like RouterModule, CommonMo
 templateUrl	           Path to the HTML file for this component
 styleUrls	           Path(s) to CSS or SCSS file(s) for styling the component
 
-✍️ Example: A Simple Component
+ Example: A Simple Component
 code:
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -33,7 +33,7 @@ In app.component.html, you could now use:
 <app-greeting></app-greeting>
 And Angular will render the component’s HTML inside that tag.
 
-✅ Extra @Component Properties You Can Use
+ Extra @Component Properties You Can Use
 Property	        Description
 template	        You can directly write inline HTML like template: '<h1>Hello</h1>'
 styles	            Inline styles instead of external file: styles: ['h1 { color: red; }']
@@ -49,7 +49,7 @@ Write reusable components
 Do better lazy loading
 Reduce complexity in small projects
 
-📌 Summary
+ Summary
 @Component is a class decorator that tells Angular how to process and display a component.
 Core properties include selector, standalone, imports, templateUrl, and styleUrls.
 standalone is especially useful in modern Angular for modular, plug-and-play components.

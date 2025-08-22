@@ -15,10 +15,11 @@ export class FormArrayComponent {
     this.employeeForm = new FormGroup({
       employees: new FormArray([]),
     });
+    console.log("employeeForm", this.employeeForm);
   }
 
   get employees(): FormArray {
-    console.log("inside employee formGrouo", this.employeeForm.get('employees') as FormArray)
+    console.log("inside employee formGrouo", this.employeeForm.get('employees') as FormArray);
     return this.employeeForm.get('employees') as FormArray;
   }
 
@@ -28,13 +29,14 @@ export class FormArrayComponent {
       job: new FormControl('', Validators.required),
     });
     this.employees.push(employeeGroup);
+    console.log("employeeGroup", employeeGroup);
   }
 
   submitForm() {
     if (this.employeeForm.invalid) {
       return;
     } else {
-      console.log(this.employeeForm.value);
+      console.log("submitted value", this.employeeForm.value);
     }
   }
 

@@ -14,7 +14,7 @@ const source$ = from([1, 2, 3, 4, 5, 6]);
 source$.pipe(
   filter(value => value % 2 === 0)  // Only even numbers
 ).subscribe(val => console.log(val));
-📤 Output:
+ Output:
 
 2
 4

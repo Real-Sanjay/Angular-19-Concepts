@@ -61,11 +61,11 @@ No manual .subscribe() — the async pipe in the template will handle it.
 
 Why This Approach Is Better?
 
-Feature	                Traditional .subscribe()	    With async Pipe
-Subscription handling	Manual	                        Automatic
-Unsubscribing	        Must do manually (risk of leak)	Auto-handled by Angular
-Syntax	                More code	                    Cleaner and declarative
-Template binding	    Requires storing data manually	Reactive and direct in template
+Feature	                Traditional .subscribe()	       With async Pipe
+Subscription handling 	Manual	                          Automatic
+Unsubscribing	          Must do manually (risk of leak)	  Auto-handled by Angular
+Syntax	                More code	                        Cleaner and declarative
+Template binding	    Requires storing data manually	    Reactive and direct in template
 
 
 Summary
@@ -73,7 +73,3 @@ You converted a manually subscribed HTTP GET request into an Observable-based fl
 Leveraged the async pipe to simplify subscription and template rendering.
 Displayed structured, specific data (name, email, etc.) in a clean table format.
 This approach aligns with best practices in modern Angular development.
-Would you like to continue this flow by adding:
-error handling with catchError?
-loading indicators (*ngIf="!(loading)")?
-or converting it into a reusable service method?

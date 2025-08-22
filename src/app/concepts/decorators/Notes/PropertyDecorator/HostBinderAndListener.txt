@@ -82,7 +82,7 @@ export class HighlightDirective {
 Summary
 
 Feature	        @HostBinding	                                             @HostListener
-Type	        Property decorator	Method decorator
+Type	        Property decorator	                                        Method decorator
 Purpose	        Bind properties/styles/attributes to the host element	     Listen to events on the host element
 Usage	        Dynamically update styles/classes	                         Execute logic on click, focus, blur, etc.
 Real-World Use	Toggle classes, update style, add accessibility props	     Animate on click, track mouse events, toggle themes

@@ -12,11 +12,12 @@ export class MyComponent implements OnInit {
     console.log("ngOnInit - Component Initialized");
   }
 }
-🛠 Constructor vs ngOnInit
+
+Constructor vs ngOnInit
 Feature	           Constructor	                                ngOnInit
-Called	            When the component class is instantiated	After Angular has fully initialized the component
-Input Binding	    Not available	                            Available
-Best for	        Simple initialization (e.g., DI)	        Component setup, fetching data, input-related logic
+Called	           When the component class is instantiated	   After Angular has fully initialized the component
+Input Binding	     Not available	                             Available
+Best for	         Simple initialization (e.g., DI)	           Component setup, fetching data, input-related logic
 
 
 Example: Counter
@@ -39,7 +40,7 @@ ngOnInit(): void {
 }
 
 
-❓ Interview Questions Breakdown
+Interview Questions Breakdown
 1.Difference between constructor and ngOnInit?
 Constructor runs first but doesn’t have access to input-bound values.
 ngOnInit is lifecycle-aware and has access to bound inputs and services.
@@ -70,4 +71,4 @@ export class ChildComponent implements OnInit {
     console.log("ngOnInit:", this.inputValue); // 'Hello from App Component'
   }
 }
-✅ This shows that @Input() values are not available in the constructor, but are available in ngOnInit.
+This shows that @Input() values are not available in the constructor, but are available in ngOnInit.

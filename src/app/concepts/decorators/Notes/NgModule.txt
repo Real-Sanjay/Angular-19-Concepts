@@ -1,4 +1,4 @@
-🧱 @NgModule() — Explained with Real Example
+ @NgModule() — Explained with Real Example
 Although Angular 17 and above use standalone components, many large projects still use modules or hybrid setups. So understanding @NgModule is still very important.
 
 Here’s how an @NgModule looks in code:
@@ -26,7 +26,7 @@ import { MyService } from './services/my.service';
   ]
 })
 export class AppModule {}
-📦 NgModule Properties (Quick Summary)
+ NgModule Properties (Quick Summary)
 
 Property	    Description
 declarations	List of components, directives, and pipes that belong to this module
@@ -53,7 +53,7 @@ Shared modules
 Organizing big applications
 Some third-party libraries still rely on it
 
-✅ Summary
+ Summary
 @NgModule() is a class decorator used to define a module in Angular.
 Even though Angular 17+ supports standalone components, learning NgModule is important.
 It helps organize and register components, services, and other dependencies.

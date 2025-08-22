@@ -1,12 +1,12 @@
-📌 What is SimpleChanges?
+What is SimpleChanges?
 SimpleChanges is an Angular interface that tracks changes in input properties of a component.
 It is used within the ngOnChanges() lifecycle hook.
 
 Helps access:
 
-🔁 Previous value
-✅ Current value
-📌 First change (Boolean flag)
+ Previous value
+ Current value
+ First change (Boolean flag)
 
 ⚙️ How SimpleChanges Works
 Structure: SimpleChanges is an object with key-value pairs.
@@ -46,7 +46,7 @@ html
 <h2>Previous Value: {{ previousValue }}</h2>
 <h2>Current Value: {{ currentValue }}</h2>
 
-📋 Key Behavior Summary
+Key Behavior Summary
 Concept	        Description
 previousValue	  Value before the change occurred
 currentValue	  Updated input value

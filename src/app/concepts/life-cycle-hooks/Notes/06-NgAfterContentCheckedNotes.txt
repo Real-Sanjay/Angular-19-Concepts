@@ -8,11 +8,11 @@ Validating inputs
 Tracking changes in content
 This hook helps you monitor or act every time that projected content is re-evaluated.
 
-✅ Key Characteristics
+Key Characteristics
 Feature	            Description
-🔁 Frequency	    Called every change detection cycle
+🔁 Frequency	      Called every change detection cycle
 🔄 Trigger	        Happens after Angular has checked projected content
-🔍 Useful for	    Validation, debugging, dynamic content handling
+🔍 Useful for	      Validation, debugging, dynamic content handling
 ⚠️ Warning	Can be a performance hit if the logic inside is heavy or poorly written
 
 
@@ -57,13 +57,13 @@ When the component is first initialized, ngAfterContentChecked() is fired.
 Any time the projected content ({{ data }}) updates (e.g., clicking "Generate"), it fires again.
 Internally, Angular uses multiple checks (even double check in development mode) to ensure the component is stable and up-to-date — this is why you see it invoked multiple times.
 
-📌 When would you use ngAfterContentChecked() instead of ngAfterContentInit()?
+When would you use ngAfterContentChecked() instead of ngAfterContentInit()?
 
 Hook	               When it's Called	                        Use Case Example
 ngAfterContentInit	   Only once, after content is projected	Setup tasks after projection
 ngAfterContentChecked  Every time content is checked	        Validation, re-evaluation, debugging
 
-⚠️ Best Practice Reminder
+Best Practice Reminder
 Avoid expensive computations or DOM manipulations in this hook.
 Don’t trigger change detection manually here (e.g., avoid updating values in this hook), or it can cause an infinite loop.
 

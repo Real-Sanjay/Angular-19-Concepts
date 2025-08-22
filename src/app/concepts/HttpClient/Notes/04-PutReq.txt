@@ -65,5 +65,5 @@ Template Code (for Button)
 Summary Table
 
 Method	        Use Case	                                Notes
-putData()	    Static or dynamic full object update	    Use when you already have updated data
-updateUser()	Fetch, modify, and send back updated data	Good for updating selective fields safely
+putData()	    Static or dynamic full object update	     Use when you already have updated data
+updateUser()	Fetch, modify, and send back updated data	 Good for updating selective fields safely
