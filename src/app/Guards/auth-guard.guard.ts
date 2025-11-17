@@ -13,5 +13,5 @@ if(authService.isLoggedInUser() === true){
   router.navigate(['/login-page']);
   return false;
 }
-return true
+// return true
 }

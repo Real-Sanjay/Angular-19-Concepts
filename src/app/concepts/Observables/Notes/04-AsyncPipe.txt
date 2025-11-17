@@ -1,4 +1,4 @@
- Async Pipe in Angular
+Async Pipe in Angular
 What is the Async Pipe?
 The Async Pipe in Angular allows you to subscribe to an Observable or a Promise directly inside the template.
 

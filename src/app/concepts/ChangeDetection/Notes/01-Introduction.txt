@@ -56,10 +56,10 @@ get randomValue() {
 }
 
 Production vs Development Mode
-Mode	    Behavior	  Purpose
+Mode	       Behavior	              Purpose
 Development	Double change detection	Error detection and debugging
 Production	Single change detection	Performance
 
 In production builds:
 Logs aren't repeated
-No expression error unless real inconsistency occurs
+No expression error unless real inconsistency occurs  

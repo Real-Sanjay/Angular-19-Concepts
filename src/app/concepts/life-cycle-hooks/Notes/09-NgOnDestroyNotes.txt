@@ -18,11 +18,11 @@ export class AppComponent {
     this.displayComponent = !this.displayComponent;
   }
 }
-✅ AppComponent Template
+AppComponent Template
 html
 <button (click)="toggleComponent()">Show / Hide Test Component</button>
 <app-test *ngIf="displayComponent"></app-test>
-✅ TestComponent (Child)
+TestComponent (Child)
 ts
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
@@ -41,16 +41,16 @@ export class TestComponent implements OnInit, OnDestroy {
   }
 }
 
-🖥️ Console Output
+ Console Output
 App loads → TestComponent - Initialized
 
 Click Hide → TestComponent - Destroyed
 
 Click Show → TestComponent - Initialized again
 
-Perfect 👌 This shows the lifecycle in action — create ➝ destroy ➝ recreate.
+Perfect  This shows the lifecycle in action — create ➝ destroy ➝ recreate.
 
-📦 Real-World Use Cases for ngOnDestroy()
+Real-World Use Cases for ngOnDestroy()
 Use Case	                    What You Do in ngOnDestroy()
 🔁 RxJS Subscriptions	        subscription.unsubscribe()
 ⏲️ Timers / Intervals	        clearTimeout() / clearInterval()
@@ -58,7 +58,7 @@ Use Case	                    What You Do in ngOnDestroy()
 🌍 Global Event Listeners	    window.removeEventListener()
 🗃️ LocalStorage Cleanup	     localStorage.removeItem() or similar
 
-⚠️ Special Notes
+Special Notes
 ngOnDestroy() is not called when:
 User refreshes the browser
 User closes the tab or window
@@ -83,7 +83,7 @@ ngAfterViewInit()     → After component’s view (and child views) initialized
 ngAfterViewChecked()  → After every check of the component’s view
 ngOnDestroy()         → Cleanup before destroying component
 
-🎯 Summary
+Summary
 ngOnDestroy() is your cleanup hook
 Always unsubscribe, stop timers, and detach listeners
 It’s not for page refresh or browser close — use HostListener for that

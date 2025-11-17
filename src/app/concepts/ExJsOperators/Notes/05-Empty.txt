@@ -48,9 +48,9 @@ Is EMPTY the same as complete()?
 
 Feature	        EMPTY	                                             complete()
 What is it?	    An RxJS observable constant                        	A method in the observer object
-Used for?	    Creating an observable that completes immediately	Indicating an observable has completed
-Emits values?	❌ No	                                           ❌ No
-Part of RxJS?	✅ Yes	                                           ✅ Yes
+Used for?	    Creating an observable that completes immediately	    Indicating an observable has completed
+Emits values?	❌ No	                                              ❌ No
+Part of RxJS?	✅ Yes	                                               ✅ Yes
 ⚠️ They may seem similar but serve different purposes:
 
 EMPTY creates an observable.

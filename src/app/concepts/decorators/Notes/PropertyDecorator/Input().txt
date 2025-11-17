@@ -37,7 +37,7 @@ ChildComponent (Child)
  └── @Input() receiveMessage
 If displayMessage is updated → receiveMessage updates instantly.
 
-📌 Notes & Pro Tips
+Notes & Pro Tips
 Renaming Input Property: You can alias it for clarity.
 code:
 @Input('message') receiveMessage: string;

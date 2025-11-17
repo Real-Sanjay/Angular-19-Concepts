@@ -33,13 +33,13 @@ import { LogMessageTwoService } from './services/log-message-two.service';
   templateUrl: './app.component.html',
   providers: [
     {
-      provide: 'LOGGER',         // 🔑 Token (String token in this case)
-      useClass: LogMessageOneService // 👈 You can switch to LogMessageTwoService here
+      provide: 'LOGGER',         //  Token (String token in this case)
+      useClass: LogMessageOneService //  You can switch to LogMessageTwoService here
     }
   ]
 })
 export class AppComponent implements OnInit {
-  logger = inject<any>('LOGGER'); // 💡 Injecting by token instead of class type
+  logger = inject<any>('LOGGER'); //  Injecting by token instead of class type
 
   ngOnInit() {
     this.logger.log();

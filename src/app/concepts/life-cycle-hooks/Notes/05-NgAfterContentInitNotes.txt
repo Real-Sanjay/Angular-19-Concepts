@@ -6,14 +6,14 @@ When does it run?
 It runs after the first ngDoCheck().
 It is called only once, even if projected content changes later.
 
-🧱 What is Content Projection?
-➡️ Content Projection:
+What is Content Projection?
+Content Projection:
 It's a technique used to pass HTML elements (not just data) from a parent component to a child component.
 
-➡️ Why not @Input()?
+ Why not @Input()?
 @Input() passes primitive or object values, but not full HTML or templates. That’s where ng-content comes in.
 
-🧩 Example:
+Example:
 Parent Component HTML:
 <app-child>
   <div style="color: blue;">Projected content</div>
@@ -24,7 +24,7 @@ Child Component HTML:
   <ng-content></ng-content>
 </div>
 
-🔄 Lifecycle Order (Simplified):
+Lifecycle Order (Simplified):
 ngOnInit() → after component’s input properties initialized.
 
 ngDoCheck() → runs on every change detection.
@@ -32,20 +32,20 @@ ngDoCheck() → runs on every change detection.
 ngAfterContentInit() → after content (via <ng-content>) has been projected.
 
 
-🔬 When to Use ngAfterContentInit?
+When to Use ngAfterContentInit?
 Use it when:
 You need to interact with projected content (from parent to child).
 You are using @ContentChild() to access a projected DOM or component.
 You want to run logic after the DOM inside <ng-content> is available.
 
-💡 Difference Between ngOnInit() vs ngAfterContentInit()
+Difference Between ngOnInit() vs ngAfterContentInit()
 Feature	                  ngOnInit()	                        ngAfterContentInit()
-Trigger Time	          After component initialization	    After content is projected via <ng-content>
-Projected Content Ready?  Not guaranteed	                    Yes
-Called How Many Times?	  Once	                                Once
-Use Case	              Setup input data, services, etc.	    Setup projected DOM, interact with content child
+Trigger Time	             After component initialization	    After content is projected via <ng-content>
+Projected Content Ready?   Not guaranteed	                    Yes
+Called How Many Times?	   Once	                              Once
+Use Case	                 Setup input data, services, etc.	  Setup projected DOM, interact with content child
 
-🛠️ Example: Using @ContentChild with ngAfterContentInit
+Example: Using @ContentChild with ngAfterContentInit
 
 // test.component.ts
 @ContentChild('projectedDiv') projected!: ElementRef;
@@ -55,13 +55,12 @@ ngAfterContentInit() {
   console.log('Projected Content:', this.projected.nativeElement);
 }
 
-Edit
 <!-- app.component.html -->
 <app-test>
   <div #projectedDiv>I am projected content</div>
 </app-test>
 
-❓What Happens If Projected Content Changes Later?
+What Happens If Projected Content Changes Later?
 ngAfterContentInit() is NOT called again.
 Use ngDoCheck() or Angular’s reactive patterns (@Input(), BehaviorSubject, etc.) to detect updates.
 

@@ -16,7 +16,7 @@ It's a best practice in large-scale or enterprise Angular apps.
 Syntax for Creating an InjectionToken
 📁 dependencies/injection-token.ts
 
-import { InjectionToken } from '@angular/core';
+import { InjectionToken } from '@angular/core'  ;
 import { LogMessageOneService } from '../services/log-message-one.service';
 
 export const LOG_MSG_ONE = new InjectionToken<LogMessageOneService>('LogMessageOne');

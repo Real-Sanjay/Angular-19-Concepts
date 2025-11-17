@@ -15,9 +15,9 @@ ngAfterContentInit
 ngAfterContentChecked
 ngAfterViewInit
 
-✅ ngAfterViewChecked ← (Fires on every change detection after view is initialized)
+ngAfterViewChecked ← (Fires on every change detection after view is initialized)
 
-🧪 Example Scenario (Recap + Expansion)
+Example Scenario (Recap + Expansion)
 AppComponent:
 Generates a random number on button click
 Uses ngDoCheck to log detection cycles
@@ -72,7 +72,7 @@ export class TestComponent implements AfterViewInit, AfterViewChecked {
     console.log('TestComponent - AfterViewChecked');
   }
 }
-✅ Console Output (after one random number generation)
+ Console Output (after one random number generation)
 AppComponent - DoCheck
 TestComponent - AfterViewChecked
 And for the first time:
@@ -80,17 +80,17 @@ And for the first time:
 TestComponent - AfterViewInit
 TestComponent - AfterViewChecked
 
-🛠️ Use Cases
+Use Cases
 DOM read/update operations after every view check
 Detecting DOM changes not related to Angular binding
 Complex condition checks after view rendering
 
 ⚠️ Caution
-❗ Don’t manipulate DOM or update component state directly here.
+Don’t manipulate DOM or update component state directly here.
 That might cause infinite loops or ExpressionChanged errors.
 If needed, wrap it in a setTimeout() or use ChangeDetectorRef cautiously.
 
-🧠 Interview Q&A Summary
+Interview Q&A Summary
 Question	                                    Answer
 Q1: What is ngAfterViewChecked() used for?	    It’s a hook triggered after Angular checks the view and child views during each change detection cycle.
 Q2: How is it different from ngAfterViewInit()?	ngAfterViewInit() runs only once. ngAfterViewChecked() runs every time the view is checked.
