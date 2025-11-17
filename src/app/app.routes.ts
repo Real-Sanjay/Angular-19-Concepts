@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { SimpleCartCalculatorComponent } from './concepts/fundamentals/simple-cart-calculator/simple-cart-calculator.component';
 import { AgeValidatorComponent } from './concepts/directives/age-validator/age-validator.component';
 import { ToggleComponent } from './concepts/directives/toggle/toggle.component';
 import { PortfolioComponent } from './concepts/directives/portfolio/portfolio.component';
@@ -47,8 +46,8 @@ import { CreateComponent } from './concepts/HttpClient/exercise/home/create/crea
 import { ChangeMainComponent } from './concepts/ChangeDetection/exercise/change-main/change-main.component';
 export const routes: Routes = [
     // {path: 'fundamentals/scc', component: SimpleCartCalculatorComponent},
-    // {path: 'directives/age-validator', component:AgeValidatorComponent},
-    // {path: 'directives/toggle', component:ToggleComponent},
+    {path: 'directives/age-validator', component:AgeValidatorComponent},
+    {path: 'directives/toggle', component:ToggleComponent},
     // {path: 'directives/portfolio', component:PortfolioComponent},
     // {path: 'life-cycle-hooks/on-change', component:NgOnChangesComponent},
     // {path: 'life-cycle-hooks/do-check', component:NgDoCheckComponent},
@@ -84,12 +83,12 @@ export const routes: Routes = [
     // {path:'login-page', component: LoginAuthComponent},
     // {path:'admin-page', component: AdminComponent, canActivate:[authGuardGuard]},
     
-    {path:'first-component', component: FirstcomponentComponent},
-    {path:'second-component', loadComponent: ()=> import('./concepts/lazy-loading/exercise/secondcomponent/secondcomponent.component').then(m => m.SecondcomponentComponent)},
-    {path: 'json-pipe', component: AsyncPipeComponent},
-    {path: 'products', component: HomeComponent},
-    {path: 'products/edit/:id', component: EditComponent},
-    {path: 'products/create', component: CreateComponent},
-    {path: 'change-main', component: ChangeMainComponent},
+    // {path:'first-component', component: FirstcomponentComponent},
+    // {path:'second-component', loadComponent: ()=> import('./concepts/lazy-loading/exercise/secondcomponent/secondcomponent.component').then(m => m.SecondcomponentComponent)},
+    // {path: 'json-pipe', component: AsyncPipeComponent},
+    // {path: 'products', component: HomeComponent},
+    // {path: 'products/edit/:id', component: EditComponent},
+    // {path: 'products/create', component: CreateComponent},
+    // {path: 'change-main', component: ChangeMainComponent},
     
 ];

@@ -4,8 +4,8 @@ It is triggered every time there is a change in input properties (decorated with
 Useful for responding to changes passed from parent to child components.
 
 
-🧪 Example Scenario Breakdown
-🧱 Step-by-Step:
+Example Scenario Breakdown
+Step-by-Step:
 In AppComponent (Parent):
 
 A property inputValue: string is defined.
@@ -37,7 +37,7 @@ ngOnChanges(changes: SimpleChanges) {
 }
 changes contains detailed metadata about input changes.
 
-🧾 SimpleChanges Interface Properties:
+SimpleChanges Interface Properties:
 When a change occurs, Angular provides an object of type SimpleChanges with the following:
 
 Property	                Description
@@ -46,7 +46,7 @@ currentValue	            The new updated value of the input property.
 firstChange	Boolean flag;   true if this is the first change.
 
 
-💬 Common Questions
+Common Questions
 1. What is the purpose of ngOnChanges?
 It detects and handles changes in component input properties.
 Called before ngOnInit, whenever input properties change.
@@ -57,7 +57,7 @@ Called on every input change	Called once, after component init
 Triggered before init	        Triggered after first change detection
 
 3. Can it detect non-input property changes?
-❌ No.
+No.
 ngOnChanges only tracks changes to properties decorated with @Input().
 
 When to Use ngOnChanges
